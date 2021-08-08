@@ -1,0 +1,22 @@
+﻿{
+  "profiles": {
+    "ResponseAutoWrapper.TestHost": {
+      "commandName": "Project",
+      "commandLineArgs": "DefaultStartup",
+      //"commandLineArgs": "NoWrapperStartup",
+      //"commandLineArgs": "AutoWrapperCoreTestStartup",
+      //"commandLineArgs": "MiddlewareExceptionStartup",
+      //"commandLineArgs": "CRIStartup",
+      //"commandLineArgs": "CRCStartup",
+      //"commandLineArgs": "DisableOpenAPISupportStartup",
+      //"commandLineArgs": "NotGenericCRCStartup",
+      //"commandLineArgs": "NotGenericCRIStartup",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "dotnetRunMessages": "true",
+      "applicationUrl": "http://0.0.0.0:5000"
+    }
+  }
+}

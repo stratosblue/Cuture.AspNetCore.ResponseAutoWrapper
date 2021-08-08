@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.*" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.*" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.*" />
+    <PackageReference Include="coverlet.collector" Version="3.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="System.Net.Http.Json" Version="5.*" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\ResponseAutoWrapper.TestHost\ResponseAutoWrapper.TestHost.csproj" />
+  </ItemGroup>
+</Project>

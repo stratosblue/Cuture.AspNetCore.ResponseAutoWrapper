@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <NoWarn>$(NoWarn);CS8600;CS8604;CS8601;CS8618;CS0162</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\ResponseAutoWrapper.Test\README.MD" Link="README.MD" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoWrapper.Core" Version="4.5.0" />
+
+    <PackageReference Include="Cuture.Http" Version="2.*" />
+    <PackageReference Include="IdentityModel" Version="5.*" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.*" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.*" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.*" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Cuture.AspNetCore.ResponseAutoWrapper\Cuture.AspNetCore.ResponseAutoWrapper.csproj" />
+  </ItemGroup>
+</Project>
