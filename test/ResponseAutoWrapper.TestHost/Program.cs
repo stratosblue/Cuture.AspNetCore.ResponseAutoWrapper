@@ -11,12 +11,8 @@ namespace ResponseAutoWrapper.TestHost
     {
         #region Public 方法
 
-#if NETCOREAPP3_1
-
-        //.netcore3.1要求必须有CreateHostBuilder？？？
+        //保留CreateHostBuilder，避免某些情况下编译失败
         public static IHostBuilder CreateHostBuilder(params string[] args) => Hosts.CreateHostBuilder<DefaultStartup>(false, args);
-
-#endif
 
         public static void Main(string[] args)
         {

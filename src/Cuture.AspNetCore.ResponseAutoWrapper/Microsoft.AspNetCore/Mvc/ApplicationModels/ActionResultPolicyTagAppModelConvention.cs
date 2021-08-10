@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Reflection;
 
-using Microsoft.AspNetCore.Mvc.Filters;
-
 using Cuture.AspNetCore.ResponseAutoWrapper;
+
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Microsoft.AspNetCore.Mvc.ApplicationModels
 {

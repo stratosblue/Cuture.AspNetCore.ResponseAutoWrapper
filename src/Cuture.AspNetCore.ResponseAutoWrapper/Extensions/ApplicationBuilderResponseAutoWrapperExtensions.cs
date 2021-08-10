@@ -1,8 +1,8 @@
 ﻿using System;
 
-using Microsoft.AspNetCore.Http;
-
 using Cuture.AspNetCore.ResponseAutoWrapper;
+
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Builder
 {

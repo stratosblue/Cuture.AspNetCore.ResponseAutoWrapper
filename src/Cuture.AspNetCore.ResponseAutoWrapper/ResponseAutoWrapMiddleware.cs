@@ -14,15 +14,13 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
     {
         #region Private 字段
 
+        private readonly Func<HttpContext, Exception, object?> _exceptionWrapDelegate;
         private readonly ILogger _logger;
-        private readonly IMessageProvider _messageProvider;
         private readonly RequestDelegate _next;
         private readonly bool _notCatchExceptions;
-        private readonly IResponseCreator _responseCreator;
-        private readonly IResponseDirectWriter _responseDirectWriter;
+        private readonly Func<HttpContext, object?> _notOKStatusCodeWrapDelegate;
 
-        /// <inheritdoc cref="MiddlewareStatusCodePredicate"/>
-        private readonly MiddlewareStatusCodePredicate _statusCodePredicate;
+        private readonly IResponseDirectWriter _responseDirectWriter;
 
         /// <inheritdoc cref="ResponseAutoWrapMiddlewareOptions.ThrowCaughtExceptions"/>
         private readonly bool _throwCaughtExceptions;
@@ -38,19 +36,26 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         {
             _next = next ?? throw new ArgumentNullException(nameof(next));
 
+            if (serviceProvider is null)
+            {
+                throw new ArgumentNullException(nameof(serviceProvider));
+            }
+
             if (options is null)
             {
                 throw new ArgumentNullException(nameof(options));
             }
 
-            _messageProvider = GetService<IMessageProvider>();
-            _responseCreator = GetService<IResponseCreator>();
             _responseDirectWriter = GetService<IResponseDirectWriter>();
             _logger = GetService<ILogger<ResponseAutoWrapMiddleware>>();
 
-            _statusCodePredicate = options.MiddlewareStatusCodePredicate;
             _notCatchExceptions = !options.CatchExceptions;
             _throwCaughtExceptions = options.ThrowCaughtExceptions;
+
+            var delegateCollection = GetService<ResponseAutoWrapperWorkDelegateCollection>();
+
+            _exceptionWrapDelegate = delegateCollection.ExceptionWrapDelegate;
+            _notOKStatusCodeWrapDelegate = delegateCollection.NotOKStatusCodeWrapDelegate;
 
             TService GetService<TService>() where TService : notnull => serviceProvider.GetRequiredService<TService>();
         }
@@ -92,13 +97,11 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
                 //响应未开始，则包装响应
                 if (!context.Response.HasStarted)
                 {
-                    context.Response.StatusCode = StatusCodes.Status200OK;
-
-                    var response = _responseCreator.CreateObject(StatusCodes.Status500InternalServerError,
-                                                                 _messageProvider.GetMessage(StatusCodes.Status500InternalServerError, context, ex),
-                                                                 exception: ex);
-
-                    await _responseDirectWriter.WriteAsync(context, response);
+                    var response = _exceptionWrapDelegate(context, ex);
+                    if (response is not null)
+                    {
+                        await _responseDirectWriter.WriteAsync(context, response);
+                    }
                 }
 
                 if (_throwCaughtExceptions)
@@ -111,13 +114,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
                 if (!context.Response.HasStarted
                     && context.Response.StatusCode != 200)
                 {
-                    var code = context.Response.StatusCode;
-                    if (await _statusCodePredicate(code))
+                    var response = _notOKStatusCodeWrapDelegate(context);
+                    if (response is not null)
                     {
-                        context.Response.StatusCode = StatusCodes.Status200OK;
-
-                        var response = _responseCreator.CreateObject(code, _messageProvider.GetMessage(code, context));
-
+                        context.Response.Headers.ContentLength = null;
                         await _responseDirectWriter.WriteAsync(context, response);
                     }
                 }

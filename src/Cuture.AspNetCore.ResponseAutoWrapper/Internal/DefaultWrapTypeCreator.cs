@@ -7,6 +7,9 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
     {
         #region Private 字段
 
+        /// <summary>
+        /// 类型是否应该包装检查委托
+        /// </summary>
         private readonly Func<Type, bool> _shouldWrapCheckDelegate;
 
         /// <summary>
@@ -53,6 +56,11 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
 
         #region Private 方法
 
+        /// <summary>
+        /// 检查类型是否需要包装（包含泛型检查）
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private bool ShouldWrapCheck(Type type)
         {
             if (_typeWrapPolicyCache.TryGetValue(type.TypeHandle.Value, out var shouldWrap))
@@ -69,6 +77,11 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
             return shouldWrap;
         }
 
+        /// <summary>
+        /// 检查类型是否需要包装（不包含泛型检查）
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         private bool ShouldWrapCheckWithOutGenericType(Type type)
         {
             //返回值本身就是响应类型或其子类

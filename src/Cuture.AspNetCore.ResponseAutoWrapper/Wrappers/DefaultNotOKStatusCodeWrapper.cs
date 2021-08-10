@@ -1,27 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
 
-namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
+namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
     /// <summary>
-    /// 默认的 <inheritdoc cref="IMessageProvider"/>
+    /// 默认的 <inheritdoc cref="INotOKStatusCodeWrapper{TResponse}"/>
     /// </summary>
-    internal class DefaultMessageProvider : IMessageProvider
+    /// <typeparam name="TResponse"></typeparam>
+    public class DefaultNotOKStatusCodeWrapper<TResponse> : INotOKStatusCodeWrapper<TResponse>
+        where TResponse : class
     {
         #region Private 字段
 
         private readonly Dictionary<int, string> _codeMap;
+        private readonly IResponseCreator<TResponse> _responseCreator;
 
         #endregion Private 字段
 
         #region Public 构造函数
 
-        /// <inheritdoc cref="DefaultMessageProvider"/>
-        public DefaultMessageProvider()
+        /// <inheritdoc cref="DefaultNotOKStatusCodeWrapper{TResponse}"/>
+        public DefaultNotOKStatusCodeWrapper(IResponseCreator<TResponse> responseCreator)
         {
+            _responseCreator = responseCreator;
+
             // [\r\n\S\s]+? int [a-z]+[0-9]+(.+?) = (\d+);
             // =>
             // _codeMap.TryAdd($2, "$1");\n
@@ -100,17 +103,41 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
         #region Public 方法
 
         /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetMessage(int code) => _codeMap.TryGetValue(code, out var value) ? value : "Error";
+        public TResponse? Wrap(HttpContext context)
+        {
+            var code = context.Response.StatusCode;
+            if (StatusCodeCheck(code))
+            {
+                context.Response.StatusCode = StatusCodes.Status200OK;
 
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetMessage(int code, HttpContext? context) => GetMessage(code);
+                string? message;
 
-        /// <inheritdoc/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public string GetMessage(int code, HttpContext? context, Exception? exception) => GetMessage(code);
+                if (context.TryGetResponseDescription(out var description))
+                {
+                    code = description.Code;
+                    message = description.Message;
+                }
+                else
+                {
+                    _codeMap.TryGetValue(code, out message);
+                }
+
+                return _responseCreator.Create(code, message);
+            }
+            return null;
+        }
 
         #endregion Public 方法
+
+        #region Protected 方法
+
+        /// <summary>
+        /// 默认的 中间件状态码处理筛选委托<para/>
+        /// </summary>
+        /// <param name="statusCode"></param>
+        /// <returns></returns>
+        protected virtual bool StatusCodeCheck(int statusCode) => statusCode is < 300 or > 399;
+
+        #endregion Protected 方法
     }
 }

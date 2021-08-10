@@ -24,21 +24,6 @@ namespace ResponseAutoWrapper.TestHost
                 Info = message,
             };
         }
-
-        public CustomResponse Create(int code, Exception exception, string? message = null)
-        {
-            return new CustomResponse()
-            {
-                StatusCode = code,
-                Info = message,
-                ErrorInfo = exception?.StackTrace,
-            };
-        }
-
-        public object CreateObject(int code, string? message = null, Exception? exception = null)
-        {
-            return Create(code, exception, message);
-        }
     }
 
     public class CustomResponseCreator : IResponseCreator<CustomResponse<object>>
@@ -60,21 +45,6 @@ namespace ResponseAutoWrapper.TestHost
                 Datas = data,
                 Info = message,
             };
-        }
-
-        public CustomResponse<object> Create(int code, Exception exception, string? message = null)
-        {
-            return new CustomResponse<object>()
-            {
-                StatusCode = code,
-                Info = message,
-                ErrorInfo = exception?.StackTrace,
-            };
-        }
-
-        public object CreateObject(int code, string? message = null, Exception? exception = null)
-        {
-            return Create(code, exception, message);
         }
     }
 }

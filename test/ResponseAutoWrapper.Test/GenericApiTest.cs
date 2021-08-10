@@ -23,20 +23,42 @@ namespace ResponseAutoWrapper.Test
         #region Public 方法
 
         [TestMethod]
+        [DataRow("/api/WeatherForecast/get?type=1")]
+        [DataRow("/api/WeatherForecast/get?type=2")]
+        [DataRow("/api/WeatherForecast/get-inheritedtask?type=1")]
+        [DataRow("/api/WeatherForecast/get-inheritedtask?type=2")]
+        [DataRow("/api/WeatherForecast/get-inheritedtask2?type=1")]
+        [DataRow("/api/WeatherForecast/get-inheritedtask2?type=2")]
+        [DataRow("/api/WeatherForecast/get-task?type=1")]
+        [DataRow("/api/WeatherForecast/get-task?type=2")]
+        [DataRow("/api/WeatherForecast/get-valuetask?type=1")]
+        [DataRow("/api/WeatherForecast/get-valuetask?type=2")]
+        public async Task Should_CustomDescription(string requestPath)
+        {
+            var response = await Client.GetFromJsonAsync<ApiResponse<WeatherForecast[]>>(requestPath);
+
+            CheckResponseCode(response, 10086);
+
+            Assert.AreEqual("Hello world!", response.Message);
+
+            Debug.WriteLine(response.Message);
+        }
+
+        [TestMethod]
         [DataRow("/api/WeatherForecast/get")]
         [DataRow("/api/WeatherForecast/get-inheritedtask")]
         [DataRow("/api/WeatherForecast/get-inheritedtask2")]
         [DataRow("/api/WeatherForecast/get-direct-api-response")]
         [DataRow("/api/WeatherForecast/get-direct-inherited-api-response")]
-        [DataRow("/api/WeatherForecast/get-dynamic?type=0")]
-        [DataRow("/api/WeatherForecast/get-dynamic?type=1")]
-        [DataRow("/api/WeatherForecast/get-dynamic?type=2")]
-        [DataRow("/api/WeatherForecast/get-dynamic-task?type=0")]
-        [DataRow("/api/WeatherForecast/get-dynamic-task?type=1")]
-        [DataRow("/api/WeatherForecast/get-dynamic-task?type=2")]
-        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?type=0")]
-        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?type=1")]
-        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?type=2")]
+        [DataRow("/api/WeatherForecast/get-dynamic?resultType=0")]
+        [DataRow("/api/WeatherForecast/get-dynamic?resultType=1")]
+        [DataRow("/api/WeatherForecast/get-dynamic?resultType=2")]
+        [DataRow("/api/WeatherForecast/get-dynamic-task?resultType=0")]
+        [DataRow("/api/WeatherForecast/get-dynamic-task?resultType=1")]
+        [DataRow("/api/WeatherForecast/get-dynamic-task?resultType=2")]
+        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?resultType=0")]
+        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?resultType=1")]
+        [DataRow("/api/WeatherForecast/get-dynamic-valuetask?resultType=2")]
         [DataRow("/api/WeatherForecast/get-task")]
         [DataRow("/api/WeatherForecast/get-task-direct-api-response")]
         [DataRow("/api/WeatherForecast/get-valuetask")]

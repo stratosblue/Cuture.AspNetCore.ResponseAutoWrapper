@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 
-using Microsoft.AspNetCore.Http;
-
 using Cuture.AspNetCore.ResponseAutoWrapper;
+
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Mvc.ApplicationModels
 {

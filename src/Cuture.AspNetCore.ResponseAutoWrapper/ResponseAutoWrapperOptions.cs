@@ -53,8 +53,8 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         /// <summary>
         /// 处理无效模型绑定状态<para/>
-        /// 设置 <see cref="ApiBehaviorOptions.InvalidModelStateResponseFactory"/> 为使用 <see cref="IInvalidModelStateResponseFormatter{TResponse}"/> 处理的委托<para/>
-        /// 可以通过注入自定义的 <see cref="IInvalidModelStateResponseFormatter{TResponse}"/> 替换默认行为<para/>
+        /// 设置 <see cref="ApiBehaviorOptions.InvalidModelStateResponseFactory"/> 为使用 <see cref="IInvalidModelStateWrapper{TResponse}"/> 处理的委托<para/>
+        /// 可以通过注入自定义的 <see cref="IInvalidModelStateWrapper{TResponse}"/> 替换默认行为<para/>
         /// </summary>
         /// <value>default value is 'true'</value>
         public bool HandleInvalidModelState { get; set; } = true;

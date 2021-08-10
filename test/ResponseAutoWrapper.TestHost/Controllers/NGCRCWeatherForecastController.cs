@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ResponseAutoWrapper.TestHost.Controllers
@@ -10,32 +10,20 @@ namespace ResponseAutoWrapper.TestHost.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class NGCRCWeatherForecastController : CRCWeatherForecastController
+    public class NGCRCWeatherForecastController : GenericWeatherForecastController
     {
         #region Public 方法
 
-        [NonAction]
-        public override CustomResponse<WeatherForecast[]> GetDirectApiResponse()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet]
         [Route("get-direct-api-response")]
-        public CustomResponse GetDirectApiResponseNG()
+        public CustomResponse GetDirectApiResponse()
         {
             return new CustomResponse() { Datas = WeatherForecast.GenerateData() };
         }
 
-        [NonAction]
-        public override InheritedCustomResponse GetDirectInheritedApiResponse()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet]
         [Route("get-direct-inherited-api-response")]
-        public InheritedCustomResponseNotGeneric GetDirectInheritedApiResponseNG()
+        public InheritedCustomResponseNotGeneric GetDirectInheritedApiResponse()
         {
             return new InheritedCustomResponseNotGeneric()
             {
@@ -43,8 +31,15 @@ namespace ResponseAutoWrapper.TestHost.Controllers
             };
         }
 
-        public override dynamic GetDynamic(int type)
+        [HttpGet]
+        [Route("get-dynamic")]
+        public override dynamic GetDynamic(int resultType, int type = 0)
         {
+            if (type == 1)
+            {
+                HttpContext.DescribeResponse(CustomCode, CustomMessage);
+            }
+
             return type switch
             {
                 0 => WeatherForecast.GenerateData(),
@@ -54,29 +49,17 @@ namespace ResponseAutoWrapper.TestHost.Controllers
             };
         }
 
-        [NonAction]
-        public override Task<CustomResponse<WeatherForecast[]>> GetTaskDirectApiResponseAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet]
         [Route("get-task-direct-api-response")]
-        public async Task<CustomResponse> GetTaskDirectApiResponseAsyncNG()
+        public async Task<CustomResponse> GetTaskDirectApiResponseAsync()
         {
             await Task.Delay(1);
             return new CustomResponse() { Datas = WeatherForecast.GenerateData() };
         }
 
-        [NonAction]
-        public override ValueTask<CustomResponse<WeatherForecast[]>> GetValueTaskDirectApiResponseAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         [HttpGet]
         [Route("get-valuetask-direct-api-response")]
-        public async ValueTask<CustomResponse> GetValueTaskDirectApiResponseAsyncNG()
+        public async ValueTask<CustomResponse> GetValueTaskDirectApiResponseAsync()
         {
             await Task.Delay(1);
             return new CustomResponse() { Datas = WeatherForecast.GenerateData() };

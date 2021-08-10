@@ -12,7 +12,7 @@ namespace Microsoft.AspNetCore.Authorization
     /// </summary>
     internal class AutoWrapperAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
     {
-        #region Public 方法
+#region Public 方法
 
         /// <inheritdoc/>
         public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Authorization
             await next(context);
         }
 
-        #endregion Public 方法
+#endregion Public 方法
     }
 }
 #endif

@@ -4,13 +4,14 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
+namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
     /// <summary>
-    /// 默认的无效模型响应格式化器
+    /// 默认的 <inheritdoc cref="IInvalidModelStateWrapper{TResponse}"/>
     /// </summary>
-    internal class DefaultInvalidModelStateResponseFormatter<TResponse> : IInvalidModelStateResponseFormatter<TResponse>
-        where TResponse : notnull
+    /// <typeparam name="TResponse"></typeparam>
+    public class DefaultInvalidModelStateWrapper<TResponse> : IInvalidModelStateWrapper<TResponse>
+        where TResponse : class
     {
         #region Private 字段
 
@@ -20,10 +21,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
 
         #region Public 构造函数
 
-        /// <inheritdoc cref="DefaultInvalidModelStateResponseFormatter{TResponse}"/>
-        public DefaultInvalidModelStateResponseFormatter(IResponseCreator<TResponse> responseCreator)
+        /// <inheritdoc cref="DefaultInvalidModelStateWrapper{TResponse}"/>
+        public DefaultInvalidModelStateWrapper(IResponseCreator<TResponse> responseCreator)
         {
-            _responseCreator = responseCreator;
+            _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
         }
 
         #endregion Public 构造函数
@@ -31,7 +32,7 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
         #region Public 方法
 
         /// <inheritdoc/>
-        public TResponse Handle(ActionContext context)
+        public TResponse Wrap(ActionContext context)
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
 
@@ -40,7 +41,7 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
 
             var message = string.Join(Environment.NewLine, errorMessages);
 
-            return _responseCreator.Create(StatusCodes.Status400BadRequest, message: message);
+            return _responseCreator.Create(code: StatusCodes.Status400BadRequest, message: message);
         }
 
         #endregion Public 方法

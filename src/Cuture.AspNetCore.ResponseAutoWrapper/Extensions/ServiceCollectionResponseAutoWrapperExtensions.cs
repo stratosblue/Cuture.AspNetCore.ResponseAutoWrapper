@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Reflection;
 
+using Cuture.AspNetCore.ResponseAutoWrapper;
+using Cuture.AspNetCore.ResponseAutoWrapper.Internal;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-
-using Cuture.AspNetCore.ResponseAutoWrapper;
-using Cuture.AspNetCore.ResponseAutoWrapper.Internal;
 
 #if NET5_0_OR_GREATER
 using Microsoft.AspNetCore.Authorization;
@@ -44,14 +44,14 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <inheritdoc cref="AddResponseAutoWrapper{TResponse}(IServiceCollection, ResponseAutoWrapperOptions)"/>
         public static IServiceCollection AddResponseAutoWrapper<TResponse>(this IServiceCollection services)
-            where TResponse : notnull, new()
+            where TResponse : class, new()
         {
             return services.AddResponseAutoWrapper<TResponse>(new ResponseAutoWrapperOptions());
         }
 
         /// <inheritdoc cref="AddResponseAutoWrapper{TResponse}(IServiceCollection, ResponseAutoWrapperOptions)"/>
         public static IServiceCollection AddResponseAutoWrapper<TResponse>(this IServiceCollection services, Action<ResponseAutoWrapperOptions>? optionsSetupAction)
-            where TResponse : notnull, new()
+            where TResponse : class, new()
         {
             var options = new ResponseAutoWrapperOptions();
 
@@ -63,21 +63,21 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// 添加响应自动包装器<para/>
         /// 使用指定的响应类型 <typeparamref name="TResponse"/> ，并使用默认的 <see cref="IResponseCreator{TResponse}"/><para/>
-        /// <typeparamref name="TResponse"/> 需要按需实现<see cref="ISetResponseCode"/>、<see cref="ISetResponseMessage"/>、<see cref="ISetResponseData"/>、<see cref="ISetResponseException"/>、
+        /// <typeparamref name="TResponse"/> 需要按需实现<see cref="ISetResponseCode"/>、<see cref="ISetResponseMessage"/>、<see cref="ISetResponseData"/>
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="services"></param>
         /// <param name="options"></param>
         /// <returns></returns>
         public static IServiceCollection AddResponseAutoWrapper<TResponse>(this IServiceCollection services, ResponseAutoWrapperOptions options)
-            where TResponse : notnull, new()
+            where TResponse : class, new()
         {
             return services.AddResponseAutoWrapper<TResponse, DefaultResponseCreator<TResponse>>(options);
         }
 
         /// <inheritdoc cref="AddResponseAutoWrapper{TResponse, TResponseCreator}(IServiceCollection, ResponseAutoWrapperOptions)"/>
         public static IServiceCollection AddResponseAutoWrapper<TResponse, TResponseCreator>(this IServiceCollection services)
-            where TResponse : notnull
+            where TResponse : class
             where TResponseCreator : IResponseCreator<TResponse>
         {
             return services.AddResponseAutoWrapper<TResponse, TResponseCreator>(new ResponseAutoWrapperOptions());
@@ -85,7 +85,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         /// <inheritdoc cref="AddResponseAutoWrapper{TResponse, TResponseCreator}(IServiceCollection, ResponseAutoWrapperOptions)"/>
         public static IServiceCollection AddResponseAutoWrapper<TResponse, TResponseCreator>(this IServiceCollection services, Action<ResponseAutoWrapperOptions>? optionsSetupAction)
-            where TResponse : notnull
+            where TResponse : class
             where TResponseCreator : IResponseCreator<TResponse>
         {
             var options = new ResponseAutoWrapperOptions();
@@ -105,7 +105,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="options"></param>
         /// <returns></returns>
         public static IServiceCollection AddResponseAutoWrapper<TResponse, TResponseCreator>(this IServiceCollection services, ResponseAutoWrapperOptions options)
-        where TResponse : notnull
+        where TResponse : class
         where TResponseCreator : IResponseCreator<TResponse>
         {
             if (services is null)
@@ -125,9 +125,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //Add IResponseCreator
             services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IResponseCreator<TResponse>), typeof(TResponseCreator)));
-            services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IResponseCreator), typeof(TResponseCreator)));
 
-            services.TryAddSingleton<IMessageProvider, DefaultMessageProvider>();
             services.TryAddSingleton<IResponseDirectWriter, DefaultResponseDirectWriter>();
 
             //Add action result filter
@@ -148,28 +146,40 @@ namespace Microsoft.Extensions.DependencyInjection
 
             if (options.HandleInvalidModelState)
             {
-                services.TryAddSingleton<IInvalidModelStateResponseFormatter<TResponse>, DefaultInvalidModelStateResponseFormatter<TResponse>>();
-
-                services.TryAddEnumerable(ServiceDescriptor.Transient<IPostConfigureOptions<ApiBehaviorOptions>, ApiBehaviorOptionsPostConfigureOptions>(CreateApiBehaviorOptionsPostConfigureOptions));
+                services.SetupInvalidModelStateWrapper<TResponse>();
             }
+
+            services.TryAddSingleton<IExceptionMessageProvider, DefaultExceptionMessageProvider>();
+
+            services.TryAddSingleton<IActionResultWrapper<TResponse>, DefaultActionResultWrapper<TResponse>>();
+            services.TryAddSingleton<IExceptionWrapper<TResponse>, DefaultExceptionWrapper<TResponse>>();
+            services.TryAddSingleton<INotOKStatusCodeWrapper<TResponse>, DefaultNotOKStatusCodeWrapper<TResponse>>();
+
+            services.TryAddSingleton<ResponseAutoWrapperWorkDelegateCollection>(serviceProvider =>
+            {
+                var exceptionWrapper = serviceProvider.GetRequiredService<IExceptionWrapper<TResponse>>();
+                var notOKStatusCodeWrapper = serviceProvider.GetRequiredService<INotOKStatusCodeWrapper<TResponse>>();
+
+                return new ResponseAutoWrapperWorkDelegateCollection(exceptionWrapper.Wrap,
+                                                                     notOKStatusCodeWrapper.Wrap);
+            });
 
             return services;
-
-            static ApiBehaviorOptionsPostConfigureOptions CreateApiBehaviorOptionsPostConfigureOptions(IServiceProvider serviceProvider)
-            {
-                return new ApiBehaviorOptionsPostConfigureOptions(Options.Options.DefaultName, options =>
-                {
-                    var formatter = serviceProvider.GetRequiredService<IInvalidModelStateResponseFormatter<TResponse>>();
-                    options.InvalidModelStateResponseFactory = context => new OkObjectResult(formatter.Handle(context));
-                });
-            }
         }
 
         #endregion Public 方法
 
         #region Private 方法
 
-        private static IServiceCollection SetupActionResultPolicyTagAppModelConvention<TResponse>(this IServiceCollection services,
+        /// <summary>
+        /// 设置ActionResult处理策略标记AppModelConvention
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="actionNoWrapPredicate"></param>
+        /// <param name="disableOpenAPISupport"></param>
+        /// <returns></returns>
+        private static void SetupActionResultPolicyTagAppModelConvention<TResponse>(this IServiceCollection services,
                                                                                                   Func<MemberInfo, bool> actionNoWrapPredicate,
                                                                                                   bool disableOpenAPISupport)
         {
@@ -201,8 +211,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.TryAddEnumerable(ServiceDescriptor.Transient<IPostConfigureOptions<MvcOptions>, MvcOptionsPostConfigureOptions>(CreateMvcOptionsPostConfigureOptions));
 
-            return services;
-
             MvcOptionsPostConfigureOptions CreateMvcOptionsPostConfigureOptions(IServiceProvider serviceProvider)
             {
                 return new MvcOptionsPostConfigureOptions(Options.Options.DefaultName, options =>
@@ -214,6 +222,32 @@ namespace Microsoft.Extensions.DependencyInjection
                                                                 : new OpenAPISupportAppModelConvention(wrapTypeCreator, actionNoWrapPredicate);
 
                     options.Conventions.Add(convention);
+                });
+            }
+        }
+
+        /// <summary>
+        /// 设置无效模型状态包装器
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="services"></param>
+        private static void SetupInvalidModelStateWrapper<TResponse>(this IServiceCollection services) where TResponse : class
+        {
+            services.TryAddSingleton<IInvalidModelStateWrapper<TResponse>, DefaultInvalidModelStateWrapper<TResponse>>();
+
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IPostConfigureOptions<ApiBehaviorOptions>, ApiBehaviorOptionsPostConfigureOptions>(CreateApiBehaviorOptionsPostConfigureOptions));
+
+            static ApiBehaviorOptionsPostConfigureOptions CreateApiBehaviorOptionsPostConfigureOptions(IServiceProvider serviceProvider)
+            {
+                return new ApiBehaviorOptionsPostConfigureOptions(Options.Options.DefaultName, options =>
+                {
+                    var wrapper = serviceProvider.GetRequiredService<IInvalidModelStateWrapper<TResponse>>();
+
+                    var originInvalidModelStateResponseFactory = options.InvalidModelStateResponseFactory;
+
+                    options.InvalidModelStateResponseFactory = context => wrapper.Wrap(context) is TResponse response
+                                                                                        ? new OkObjectResult(response)
+                                                                                        : originInvalidModelStateResponseFactory(context);
                 });
             }
         }

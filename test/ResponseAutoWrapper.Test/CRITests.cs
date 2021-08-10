@@ -29,20 +29,42 @@ namespace ResponseAutoWrapper.Test
         #region Public 方法
 
         [TestMethod]
+        [DataRow("/get?type=1")]
+        [DataRow("/get?type=2")]
+        [DataRow("/get-inheritedtask?type=1")]
+        [DataRow("/get-inheritedtask?type=2")]
+        [DataRow("/get-inheritedtask2?type=1")]
+        [DataRow("/get-inheritedtask2?type=2")]
+        [DataRow("/get-task?type=1")]
+        [DataRow("/get-task?type=2")]
+        [DataRow("/get-valuetask?type=1")]
+        [DataRow("/get-valuetask?type=2")]
+        public async Task Should_CustomDescription(string requestPath)
+        {
+            var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+
+            CheckResponseCode(response, 10086);
+
+            Assert.AreEqual("Hello world!", response.Msg);
+
+            Debug.WriteLine(response.Msg);
+        }
+
+        [TestMethod]
         [DataRow("/get")]
         [DataRow("/get-inheritedtask")]
         [DataRow("/get-inheritedtask2")]
         [DataRow("/get-direct-api-response")]
         [DataRow("/get-direct-inherited-api-response")]
-        [DataRow("/get-dynamic?type=0")]
-        [DataRow("/get-dynamic?type=1")]
-        [DataRow("/get-dynamic?type=2")]
-        [DataRow("/get-dynamic-task?type=0")]
-        [DataRow("/get-dynamic-task?type=1")]
-        [DataRow("/get-dynamic-task?type=2")]
-        [DataRow("/get-dynamic-valuetask?type=0")]
-        [DataRow("/get-dynamic-valuetask?type=1")]
-        [DataRow("/get-dynamic-valuetask?type=2")]
+        [DataRow("/get-dynamic?resultType=0")]
+        [DataRow("/get-dynamic?resultType=1")]
+        [DataRow("/get-dynamic?resultType=2")]
+        [DataRow("/get-dynamic-task?resultType=0")]
+        [DataRow("/get-dynamic-task?resultType=1")]
+        [DataRow("/get-dynamic-task?resultType=2")]
+        [DataRow("/get-dynamic-valuetask?resultType=0")]
+        [DataRow("/get-dynamic-valuetask?resultType=1")]
+        [DataRow("/get-dynamic-valuetask?resultType=2")]
         [DataRow("/get-task")]
         [DataRow("/get-task-direct-api-response")]
         [DataRow("/get-valuetask")]
