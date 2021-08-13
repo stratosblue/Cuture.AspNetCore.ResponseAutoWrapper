@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -42,6 +41,13 @@ namespace SimpleWebApplication.Controllers
         public ApiResponse GetWithCustomMessage()
         {
             return EmptyApiResponse.Create("自定义消息");
+        }
+
+        [HttpGet]
+        [Route("ex")]
+        public ApiResponse ThrowException()
+        {
+            throw new Exception("Some Exception Throwed.");
         }
     }
 }

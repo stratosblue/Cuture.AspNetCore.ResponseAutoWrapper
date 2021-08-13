@@ -36,10 +36,11 @@ namespace SimpleWebApplication
             services.AddResponseAutoWrapper(options =>
             {
                 //配置
-                //options.ActionNoWrapPredicate Action的筛选委托，默认会过滤掉标记了NoResponseWrapAttribute的方法
-                //options.DisableOpenAPISupport 禁用OpenAPI支持，Swagger将不会显示包装后的格式，也会解除响应类型必须为object泛型的限制
-                //options.HandleAuthorizationResult 处理授权结果（可能无效，需要自行测试）
-                //options.HandleInvalidModelState 处理无效模型状态
+                //options.ActionNoWrapPredicate     //Action的筛选委托，默认会过滤掉标记了NoResponseWrapAttribute的方法
+                //options.DisableOpenAPISupport     //禁用OpenAPI支持，Swagger将不会显示包装后的格式，也会解除响应类型必须为object泛型的限制
+                //options.HandleAuthorizationResult     //处理授权结果（可能无效，需要自行测试）
+                //options.HandleInvalidModelState       //处理无效模型状态
+                //options.UseWrapper<CustomExceptionWrapper>();     //使用自定义的包装器;
             });
         }
 
@@ -56,7 +57,7 @@ namespace SimpleWebApplication
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimpleWebApplication v1"));
             }

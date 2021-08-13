@@ -2,6 +2,14 @@
 ## 1. Intro
 用于`asp.net core`的响应和异常自动包装器，使`Action`提供一致的响应内容格式
 
+- 支持`Swagger`，能够正确展示包装后的类型结构；
+- 支持自定义响应结构，自定义异常解析等；
+- 基于`asp.net core`自身的特性实现，兼容性较好，性能影响较低（目前只做了初步的测试，在简单场景下，性能降低大概在`5%`左右）；
+- 灵活的筛选方式，可以更准确的筛选出不需要包装的Action；
+
+执行流程概览：
+![执行流程概览](./execution_flow.png)
+
 ## 2. 注意项
 - 目标框架`net5.0`、`netcoreapp3.1`
 - 包装功能由两个包装器实现：
@@ -20,11 +28,40 @@
     - `IExceptionWrapper<TResponse>`: 针对`中间件中捕获到异常`的包装器；
     - `IInvalidModelStateWrapper<TResponse>`: `参数验证失败`的包装器；
     - `INotOKStatusCodeWrapper<TResponse>`: 中间件中`StatusCode`非`200`的响应包装器；
+- 默认的`IActionResultWrapper`只会处理`ObjectResult`、`EmptyResult`、`StatusCodeResult`；
 - 理论上能够与其它组件友好共存，如`Swagger`等，不过还没有做足够的测试；
+- 自定义统一响应类型`TResponse`时，如果`启用了OpenAPI支持`，则其必须为泛型参数为`object`的泛型，例如：
+    - 自定义统一响应类型如下：
+        ```C#
+        public class CustomResponse<TData>
+        {
+            public int Code { get; set; } = 200;
+            public TData? Data { get; set; }
+            public string? Info { get; set; }
+        }
+        ```
+    - 则对应的创建器泛型参数必须为`CustomResponse<object>`，即：
+        ```C#
+        public class CustomResponseCreator : IResponseCreator<CustomResponse<object>>
+        {
+            public CustomResponse<object> Create(int code, string? message = null)
+            {
+                return new CustomResponse<object>(){Code = code,Info = message};
+            }
+
+            public CustomResponse<object> Create(int code, object? data, string? message = null)
+            {
+                return new CustomResponse<object>(){Code = code,Data = data,Info = message};
+            }
+        }
+        ```
+    - 则注册时其泛型参数必须为`object`，即：
+        ```C#
+        services.AddResponseAutoWrapper<CustomResponse<object>, CustomResponseCreator>();
+        ```
 
 ### 可能存在问题的点
 - `ResultFilter`中会频繁`未加锁`读取`ActionDescriptor.Properties`，如果存在不正确的写入，可能引发一些问题；
-- `ResultFilter`中只处理了`ObjectResult`和`EmptyResult`，暂时还不明确其他的`IActionResult`；
 - 使用动态添加`ProducesResponseTypeAttribute`的方式实现的`OpenAPI`支持，可能存在不完善的地方；
 - `asp.net core3.1`不支持`IAuthorizationMiddlewareResultHandler`，不支持选项`HandleAuthorizationResult`；
 - `授权`和`认证`失败的包装需要手动指定对应组件的失败处理方法，否则可能无法包装；
@@ -55,6 +92,7 @@ services.AddResponseAutoWrapper(options =>
     //options.DisableOpenAPISupport 禁用OpenAPI支持，Swagger将不会显示包装后的格式，也会解除响应类型必须为object泛型的限制
     //options.HandleAuthorizationResult 处理授权结果（可能无效，需要自行测试）
     //options.HandleInvalidModelState 处理无效模型状态
+    //options.UseWrapper<TWrapper>() 使用指定类型的包装器替代默认包装器
 });
 ```
 

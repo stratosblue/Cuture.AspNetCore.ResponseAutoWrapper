@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using Cuture.AspNetCore.ResponseAutoWrapper;
@@ -144,6 +146,8 @@ namespace Microsoft.Extensions.DependencyInjection
             }
 #endif
 
+            services.ApplyCustomWrappers<TResponse>(options.Wrappers);
+
             if (options.HandleInvalidModelState)
             {
                 services.SetupInvalidModelStateWrapper<TResponse>();
@@ -170,6 +174,50 @@ namespace Microsoft.Extensions.DependencyInjection
         #endregion Public 方法
 
         #region Private 方法
+
+        /// <summary>
+        /// 应用自定义包装器
+        /// </summary>
+        /// <typeparam name="TResponse"></typeparam>
+        /// <param name="services"></param>
+        /// <param name="wrapperTypes"></param>
+        private static void ApplyCustomWrappers<TResponse>(this IServiceCollection services, IEnumerable<Type> wrapperTypes)
+            where TResponse : class
+        {
+            if (!wrapperTypes.Any())
+            {
+                return;
+            }
+
+            //为了在使用的时候可以少写一点代码，这里使用代码实现等价功能
+
+            foreach (var item in wrapperTypes)
+            {
+                Type serviceType;
+                if (item.IsAssignableTo(typeof(IActionResultWrapper<TResponse>)))
+                {
+                    serviceType = typeof(IActionResultWrapper<TResponse>);
+                }
+                else if (item.IsAssignableTo(typeof(IExceptionWrapper<TResponse>)))
+                {
+                    serviceType = typeof(IExceptionWrapper<TResponse>);
+                }
+                else if (item.IsAssignableTo(typeof(IInvalidModelStateWrapper<TResponse>)))
+                {
+                    serviceType = typeof(IInvalidModelStateWrapper<TResponse>);
+                }
+                else if (item.IsAssignableTo(typeof(INotOKStatusCodeWrapper<TResponse>)))
+                {
+                    serviceType = typeof(INotOKStatusCodeWrapper<TResponse>);
+                }
+                else
+                {
+                    throw new ArgumentException($"{item} not implemented any wrapper interface for response type {typeof(TResponse)}.");
+                }
+
+                services.TryAddEnumerable(ServiceDescriptor.Singleton(serviceType, item));
+            }
+        }
 
         /// <summary>
         /// 设置ActionResult处理策略标记AppModelConvention

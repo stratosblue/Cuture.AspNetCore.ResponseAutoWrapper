@@ -3,7 +3,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
@@ -16,7 +15,6 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
     {
         #region Private 字段
 
-        private readonly ILogger _logger;
         private readonly IResponseCreator<TResponse> _responseCreator;
         private readonly IWrapTypeCreator _wrapTypeCreator;
 
@@ -26,12 +24,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         /// <inheritdoc cref="DefaultActionResultWrapper{TResponse}"/>
         public DefaultActionResultWrapper(IResponseCreator<TResponse> responseCreator,
-                                          IWrapTypeCreator wrapTypeCreator,
-                                          ILogger<DefaultActionResultWrapper<TResponse>> logger)
+                                          IWrapTypeCreator wrapTypeCreator)
         {
             _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
             _wrapTypeCreator = wrapTypeCreator ?? throw new ArgumentNullException(nameof(wrapTypeCreator));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         #endregion Public 构造函数
@@ -51,15 +47,20 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
                     var description = context.HttpContext.GetResponseDescription();
                     return _responseCreator.Create(description.Code, objectResult.Value, description.Message);
                 }
-                return null;
             }
             else if (actionResult is EmptyResult
                      || actionResult is null)
             {
-                return _responseCreator.Create(StatusCodes.Status200OK);
+                return context.HttpContext.TryGetResponseDescription(out var description)
+                            ? _responseCreator.Create(description.Code, description.Message)
+                            : _responseCreator.Create(StatusCodes.Status200OK);
             }
-
-            _logger.LogError("暂时无法处理的返回值类型 - {1} : {2}", actionResult.GetType(), actionResult);
+            else if (actionResult is StatusCodeResult statusCodeResult)
+            {
+                return context.HttpContext.TryGetResponseDescription(out var description)
+                            ? _responseCreator.Create(description.Code, description.Message)
+                            : _responseCreator.Create(statusCodeResult.StatusCode);
+            }
 
             return null;
         }

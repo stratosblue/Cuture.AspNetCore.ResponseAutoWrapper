@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,11 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         private Func<MemberInfo, bool>? _actionNoWrapPredicate;
 
         #endregion Private 字段
+
+        /// <summary>
+        /// 包装器类型列表
+        /// </summary>
+        internal List<Type> Wrappers { get; } = new();
 
         #region Public 属性
 
