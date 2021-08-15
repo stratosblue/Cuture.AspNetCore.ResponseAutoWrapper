@@ -254,3 +254,33 @@ app.UseResponseAutoWrapper(options =>
 - `IExceptionMessageProvider`: 从异常解析返回消息的消息提供器；
 - `IResponseDirectWriter`: 用于中间件中写入响应，默认为写入json；
 - `IWrapTypeCreator`: 确认Action返回对象类型是否需要包装，以及创建OpenAPI展示的泛型类；
+
+## 5. 性能测试结果
+
+- 系统：`Ubuntu20.04 on WSL2` host by Windows10-21H1
+- CPU：`I7-8700`
+- 平台：`asp.net core 5.0`
+- 测试软件：`wrk`
+- 测试软件参数：`-t 3 -c 100 -d 30s`
+- 测试Action为：
+    ```C#
+    [HttpGet]
+    public IEnumerable<WeatherForecast> Get(int count = 5)
+    {
+        return WeatherForecast.GenerateData(count);
+    }
+    ```
+- 测试均为使用`localhost`，以尽量减少网络的影响；
+- 对比对象分别为：
+    - Origin：原生，没有进行包装
+    - Cuture.AspNetCore.ResponseAutoWrapper：此自动包装库
+    - [AutoWrapper.Core](https://github.com/proudmonkey/AutoWrapper)：另一个同类型的自动包装库
+- 结果为多次运行取峰值；
+- 测试环境不专业，会有一定的误差，数值仅供参考；
+
+### 数据（单位 `Requests/sec`）
+|`count`      |      Origin              |Cuture.AspNetCore.ResponseAutoWrapper|   AutoWrapper.Core      |
+|   ----      |   ----                   |                ----                 |         ----            |
+| 1           |123267.40                 |111868.34                            |91202.04                 |
+| 10          |108264.80                 |103125.32                            |67001.92                 |
+| 50          |76310.72                  |73451.83                             |32275.47                 |

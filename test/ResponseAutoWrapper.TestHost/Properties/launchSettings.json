@@ -2,9 +2,8 @@
   "profiles": {
     "ResponseAutoWrapper.TestHost": {
       "commandName": "Project",
-      "commandLineArgs": "DefaultStartup",
+      //"commandLineArgs": "DefaultStartup",
       //"commandLineArgs": "NoWrapperStartup",
-      //"commandLineArgs": "AutoWrapperCoreTestStartup",
       //"commandLineArgs": "MiddlewareExceptionStartup",
       //"commandLineArgs": "CRIStartup",
       //"commandLineArgs": "CRCStartup",
