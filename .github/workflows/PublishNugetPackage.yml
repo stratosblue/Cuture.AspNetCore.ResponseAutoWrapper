@@ -19,7 +19,7 @@ jobs:
     - name: restore dependencies
       run: dotnet restore
     - name: build
-      run: dotnet build --no-restore -c Release
+      run: dotnet build --no-restore -c Release ./src/Cuture.AspNetCore.ResponseAutoWrapper/Cuture.AspNetCore.ResponseAutoWrapper.csproj
     - name: pack
       run: dotnet pack -c Release -o ./output --include-symbols
     - name: push package
