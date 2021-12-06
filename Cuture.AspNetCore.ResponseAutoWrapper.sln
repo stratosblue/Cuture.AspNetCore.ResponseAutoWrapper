@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31515.178
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E536BBD4-DBE4-4C31-A179-837B78A29A8B}"
 EndProject
@@ -23,7 +23,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWebApplication", "sam
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cuture.AspNetCore.ResponseAutoWrapper", "src\Cuture.AspNetCore.ResponseAutoWrapper\Cuture.AspNetCore.ResponseAutoWrapper.csproj", "{BB62B5BF-27B1-4DEC-90EC-75E48B11E886}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResponseAutoWrapper.BenchmarkHost", "test\ResponseAutoWrapper.BenchmarkHost\ResponseAutoWrapper.BenchmarkHost.csproj", "{5D1825E3-5801-45B2-9423-8BE58E69C1AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ResponseAutoWrapper.BenchmarkHost", "test\ResponseAutoWrapper.BenchmarkHost\ResponseAutoWrapper.BenchmarkHost.csproj", "{5D1825E3-5801-45B2-9423-8BE58E69C1AC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{08A4E6D1-373E-4E59-B0AD-E78E711793F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{10375BEE-CD2F-4DE6-891F-26590777E429}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\PublishNugetPackage.yml = .github\workflows\PublishNugetPackage.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +68,8 @@ Global
 		{69144DD5-E0FB-4FCF-8763-579D0A16E7D5} = {617DB063-D28A-4F46-A93F-FF89ADD787AC}
 		{BB62B5BF-27B1-4DEC-90EC-75E48B11E886} = {E536BBD4-DBE4-4C31-A179-837B78A29A8B}
 		{5D1825E3-5801-45B2-9423-8BE58E69C1AC} = {64317A26-58AF-45C1-A285-4EBB0A678BCC}
+		{08A4E6D1-373E-4E59-B0AD-E78E711793F3} = {20964519-17B2-4D4B-9E75-E83D57AAB3B7}
+		{10375BEE-CD2F-4DE6-891F-26590777E429} = {08A4E6D1-373E-4E59-B0AD-E78E711793F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {59456E4A-D5F5-4307-8E13-843E88D39815}

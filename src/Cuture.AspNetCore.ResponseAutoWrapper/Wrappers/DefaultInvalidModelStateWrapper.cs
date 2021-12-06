@@ -36,8 +36,8 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         {
             context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
 
-            var errorMessages = context.ModelState.Where(m => m.Value.Errors.Count > 0)
-                                                  .Select(m => $"{m.Key} - {m.Value.Errors.FirstOrDefault()?.ErrorMessage}");
+            var errorMessages = context.ModelState.Where(m => m.Value?.Errors.Count > 0)
+                                                  .Select(m => $"{m.Key} - {m.Value?.Errors.FirstOrDefault()?.ErrorMessage}");
 
             var message = string.Join(Environment.NewLine, errorMessages);
 

@@ -25,6 +25,11 @@
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.*" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.*" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.*" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cuture.AspNetCore.ResponseAutoWrapper\Cuture.AspNetCore.ResponseAutoWrapper.csproj" />
   </ItemGroup>
