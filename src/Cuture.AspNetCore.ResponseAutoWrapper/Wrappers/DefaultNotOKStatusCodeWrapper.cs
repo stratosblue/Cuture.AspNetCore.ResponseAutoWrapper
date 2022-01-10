@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
@@ -15,15 +16,19 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         private readonly Dictionary<int, string> _codeMap;
         private readonly IResponseCreator<TResponse> _responseCreator;
+        private readonly int? _rewriteStatusCode;
 
         #endregion Private 字段
 
         #region Public 构造函数
 
         /// <inheritdoc cref="DefaultNotOKStatusCodeWrapper{TResponse}"/>
-        public DefaultNotOKStatusCodeWrapper(IResponseCreator<TResponse> responseCreator)
+        public DefaultNotOKStatusCodeWrapper(IResponseCreator<TResponse> responseCreator,
+                                             IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
         {
             _responseCreator = responseCreator;
+
+            _rewriteStatusCode = optionsAccessor?.Value?.RewriteStatusCode;
 
             // [\r\n\S\s]+? int [a-z]+[0-9]+(.+?) = (\d+);
             // =>
@@ -108,7 +113,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
             var code = context.Response.StatusCode;
             if (StatusCodeCheck(code))
             {
-                context.Response.StatusCode = StatusCodes.Status200OK;
+                if (_rewriteStatusCode.HasValue)
+                {
+                    context.Response.StatusCode = _rewriteStatusCode.Value;
+                }
 
                 string? message;
 

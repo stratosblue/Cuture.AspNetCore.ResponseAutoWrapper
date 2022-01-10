@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Reflection;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 #if NET5_0_OR_GREATER
 
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 #endif
 
@@ -25,10 +25,14 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         #endregion Private 字段
 
+        #region Internal 属性
+
         /// <summary>
         /// 包装器类型列表
         /// </summary>
         internal List<Type> Wrappers { get; } = new();
+
+        #endregion Internal 属性
 
         #region Public 属性
 
@@ -64,6 +68,13 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         /// </summary>
         /// <value>default value is 'true'</value>
         public bool HandleInvalidModelState { get; set; } = true;
+
+        /// <summary>
+        /// 重写状态码<para/>
+        /// 如果此项的值不为空，则当响应状态码不为 <see cref="StatusCodes.Status200OK"/> 时，使用该值进行重新设置状态码<para/>
+        /// 默认为 <see cref="StatusCodes.Status200OK"/>
+        /// </summary>
+        public int? RewriteStatusCode { get; set; } = StatusCodes.Status200OK;
 
         #endregion Public 属性
 

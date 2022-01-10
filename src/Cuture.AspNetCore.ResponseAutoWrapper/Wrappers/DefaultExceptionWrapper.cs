@@ -1,6 +1,7 @@
 ﻿using System;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
@@ -15,6 +16,7 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         private readonly IExceptionMessageProvider _exceptionMessageProvider;
         private readonly IResponseCreator<TResponse> _responseCreator;
+        private readonly int? _rewriteStatusCode;
 
         #endregion Private 字段
 
@@ -22,10 +24,12 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
 
         /// <inheritdoc cref="DefaultExceptionWrapper{TResponse}"/>
         public DefaultExceptionWrapper(IResponseCreator<TResponse> responseCreator,
-                                       IExceptionMessageProvider exceptionMessageProvider)
+                                       IExceptionMessageProvider exceptionMessageProvider,
+                                       IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
         {
             _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
             _exceptionMessageProvider = exceptionMessageProvider ?? throw new ArgumentNullException(nameof(exceptionMessageProvider));
+            _rewriteStatusCode = optionsAccessor?.Value?.RewriteStatusCode;
         }
 
         #endregion Public 构造函数
@@ -35,7 +39,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         /// <inheritdoc/>
         public TResponse? Wrap(HttpContext httpContext, Exception exception)
         {
-            httpContext.Response.StatusCode = StatusCodes.Status200OK;
+            if (_rewriteStatusCode.HasValue)
+            {
+                httpContext.Response.StatusCode = _rewriteStatusCode.Value;
+            }
 
             return _responseCreator.Create(code: StatusCodes.Status500InternalServerError,
                                            message: _exceptionMessageProvider.ParseMessage(httpContext, exception));

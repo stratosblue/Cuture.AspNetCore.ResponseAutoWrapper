@@ -3,6 +3,7 @@ using System.Linq;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper
 {
@@ -16,15 +17,18 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         #region Private 字段
 
         private readonly IResponseCreator<TResponse> _responseCreator;
+        private readonly int? _rewriteStatusCode;
 
         #endregion Private 字段
 
         #region Public 构造函数
 
         /// <inheritdoc cref="DefaultInvalidModelStateWrapper{TResponse}"/>
-        public DefaultInvalidModelStateWrapper(IResponseCreator<TResponse> responseCreator)
+        public DefaultInvalidModelStateWrapper(IResponseCreator<TResponse> responseCreator,
+                                               IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
         {
             _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
+            _rewriteStatusCode = optionsAccessor?.Value?.RewriteStatusCode;
         }
 
         #endregion Public 构造函数
@@ -34,7 +38,10 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
         /// <inheritdoc/>
         public TResponse Wrap(ActionContext context)
         {
-            context.HttpContext.Response.StatusCode = StatusCodes.Status200OK;
+            if (_rewriteStatusCode.HasValue)
+            {
+                context.HttpContext.Response.StatusCode = _rewriteStatusCode.Value;
+            }
 
             var errorMessages = context.ModelState.Where(m => m.Value?.Errors.Count > 0)
                                                   .Select(m => $"{m.Key} - {m.Value?.Errors.FirstOrDefault()?.ErrorMessage}");

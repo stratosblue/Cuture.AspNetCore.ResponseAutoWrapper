@@ -82,7 +82,7 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper
                     //不抛出异常时，记录异常
                     var request = context.Request;
                     //https://github.com/dotnet/aspnetcore/tree/8dd33378697e6f8ca89116170ec3046c185724b6/src/Hosting/Hosting/src/Internal/HostingRequestStartingLog.cs
-                    _logger.LogError(ex, "Request error {0} {1} {2}://{3}{4}{5}{6} {7} {8}",
+                    _logger.LogError(ex, "Request error {Protocol} {Method} {Scheme}://{Host}{PathBase}{Path}{QueryString} {ContentType} {ContentLength}",
                                      request.Protocol,
                                      request.Method,
                                      request.Scheme,
