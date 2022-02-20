@@ -2,26 +2,25 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ResponseAutoWrapper.TestHost
+namespace ResponseAutoWrapper.TestHost;
+
+public class NotGenericCRIStartup : BaseStartup
 {
-    public class NotGenericCRIStartup : BaseStartup
+    public NotGenericCRIStartup(IConfiguration configuration) : base(configuration)
     {
-        public NotGenericCRIStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+    }
 
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseResponseAutoWrapper();
+    public override void Configure(IApplicationBuilder app)
+    {
+        app.UseResponseAutoWrapper();
 
-            base.Configure(app);
-        }
+        base.Configure(app);
+    }
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
+    public override void ConfigureServices(IServiceCollection services)
+    {
+        base.ConfigureServices(services);
 
-            services.AddResponseAutoWrapper<CustomResponseI>(options => options.DisableOpenAPISupport = true);
-        }
+        services.AddResponseAutoWrapper<CustomResponseI>(options => options.DisableOpenAPISupport = true);
     }
 }

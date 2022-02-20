@@ -1,23 +1,22 @@
-﻿namespace Microsoft.AspNetCore.Mvc.Filters
+﻿namespace Microsoft.AspNetCore.Mvc.Filters;
+
+/// <summary>
+/// Action Result 处理策略
+/// </summary>
+internal enum ActionResultPolicy
 {
     /// <summary>
-    /// Action Result 处理策略
+    /// 未知
     /// </summary>
-    internal enum ActionResultPolicy
-    {
-        /// <summary>
-        /// 未知
-        /// </summary>
-        Unknown = 0,
+    Unknown = 0,
 
-        /// <summary>
-        /// 处理
-        /// </summary>
-        Process,
+    /// <summary>
+    /// 处理
+    /// </summary>
+    Process,
 
-        /// <summary>
-        /// 跳过
-        /// </summary>
-        Skip,
-    }
+    /// <summary>
+    /// 跳过
+    /// </summary>
+    Skip,
 }

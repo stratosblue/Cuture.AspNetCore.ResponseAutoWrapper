@@ -3,65 +3,64 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ResponseAutoWrapper.BenchmarkHost
+namespace ResponseAutoWrapper.BenchmarkHost;
+
+public class AutoWrapperCoreStartup : BaseStartup
 {
-    public class AutoWrapperCoreStartup : BaseStartup
+    #region Public 方法
+
+    public override void Configure(IApplicationBuilder app)
     {
-        #region Public 方法
-
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseAutoWrapper();
-            base.Configure(app);
-        }
-
-        #endregion Public 方法
+        app.UseAutoWrapper();
+        base.Configure(app);
     }
 
-    public abstract class BaseStartup
+    #endregion Public 方法
+}
+
+public abstract class BaseStartup
+{
+    #region Public 方法
+
+    public virtual void Configure(IApplicationBuilder app)
     {
-        #region Public 方法
+        app.UseRouting();
 
-        public virtual void Configure(IApplicationBuilder app)
+        app.UseEndpoints(endpoints =>
         {
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-
-        public virtual void ConfigureServices(IServiceCollection services)
-        {
-            services.AddControllers();
-        }
-
-        #endregion Public 方法
+            endpoints.MapControllers();
+        });
     }
 
-    public class NoWrapperStartup : BaseStartup
+    public virtual void ConfigureServices(IServiceCollection services)
     {
+        services.AddControllers();
     }
 
-    public class ResponseAutoWrapperStartup : BaseStartup
+    #endregion Public 方法
+}
+
+public class NoWrapperStartup : BaseStartup
+{
+}
+
+public class ResponseAutoWrapperStartup : BaseStartup
+{
+    #region Public 方法
+
+    public override void Configure(IApplicationBuilder app)
     {
-        #region Public 方法
+        app.UseResponseAutoWrapper();
 
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseResponseAutoWrapper();
-
-            base.Configure(app);
-        }
-
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
-
-            services.AddResponseAutoWrapper();
-        }
-
-        #endregion Public 方法
+        base.Configure(app);
     }
+
+    public override void ConfigureServices(IServiceCollection services)
+    {
+        base.ConfigureServices(services);
+
+        services.AddResponseAutoWrapper();
+    }
+
+    #endregion Public 方法
 }

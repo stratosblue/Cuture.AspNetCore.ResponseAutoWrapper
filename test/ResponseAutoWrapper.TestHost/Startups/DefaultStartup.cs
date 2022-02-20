@@ -2,26 +2,25 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ResponseAutoWrapper.TestHost
+namespace ResponseAutoWrapper.TestHost;
+
+public class DefaultStartup : BaseStartup
 {
-    public class DefaultStartup : BaseStartup
+    public DefaultStartup(IConfiguration configuration) : base(configuration)
     {
-        public DefaultStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+    }
 
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseResponseAutoWrapper();
+    public override void Configure(IApplicationBuilder app)
+    {
+        app.UseResponseAutoWrapper();
 
-            base.Configure(app);
-        }
+        base.Configure(app);
+    }
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
+    public override void ConfigureServices(IServiceCollection services)
+    {
+        base.ConfigureServices(services);
 
-            services.AddResponseAutoWrapper();
-        }
+        services.AddResponseAutoWrapper();
     }
 }

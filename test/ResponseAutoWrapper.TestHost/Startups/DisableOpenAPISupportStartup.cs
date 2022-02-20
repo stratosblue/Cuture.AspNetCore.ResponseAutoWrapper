@@ -2,26 +2,25 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ResponseAutoWrapper.TestHost
+namespace ResponseAutoWrapper.TestHost;
+
+public class DisableOpenAPISupportStartup : BaseStartup
 {
-    public class DisableOpenAPISupportStartup : BaseStartup
+    public DisableOpenAPISupportStartup(IConfiguration configuration) : base(configuration)
     {
-        public DisableOpenAPISupportStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
+    }
 
-        public override void Configure(IApplicationBuilder app)
-        {
-            app.UseResponseAutoWrapper();
+    public override void Configure(IApplicationBuilder app)
+    {
+        app.UseResponseAutoWrapper();
 
-            base.Configure(app);
-        }
+        base.Configure(app);
+    }
 
-        public override void ConfigureServices(IServiceCollection services)
-        {
-            base.ConfigureServices(services);
+    public override void ConfigureServices(IServiceCollection services)
+    {
+        base.ConfigureServices(services);
 
-            services.AddResponseAutoWrapper(options => options.DisableOpenAPISupport = true);
-        }
+        services.AddResponseAutoWrapper(options => options.DisableOpenAPISupport = true);
     }
 }

@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 
-namespace ResponseAutoWrapper.TestHost
+namespace ResponseAutoWrapper.TestHost;
+
+public class NoWrapperStartup : BaseStartup
 {
-    public class NoWrapperStartup : BaseStartup
+    public NoWrapperStartup(IConfiguration configuration) : base(configuration)
     {
-        public NoWrapperStartup(IConfiguration configuration) : base(configuration)
-        {
-        }
     }
 }
