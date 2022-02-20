@@ -4,7 +4,7 @@
     /// 设置响应数据接口<para/>
     /// 当需要替换默认响应类型，且不自行实现<see cref="IResponseCreator{TResponse}"/>时，实现此接口以处理响应数据
     /// </summary>
-    public interface ISetResponseData
+    public interface ISetResponseDataFeature
     {
         #region Public 方法
 

@@ -22,7 +22,7 @@ namespace ResponseAutoWrapper.TestHost
         public string Info { get; set; }
     }
 
-    public class CustomResponseI : ISetResponseCode, ISetResponseData, ISetResponseMessage
+    public class CustomResponseI : ISetResponseCodeFeature, ISetResponseDataFeature, ISetResponseMessageFeature
     {
         public int ResultCode { get; set; } = 200;
 
@@ -37,7 +37,7 @@ namespace ResponseAutoWrapper.TestHost
         public void SetMessage(string? message) => Msg = message;
     }
 
-    public class CustomResponseI<TData> : ISetResponseCode, ISetResponseData, ISetResponseMessage
+    public class CustomResponseI<TData> : ISetResponseCodeFeature, ISetResponseDataFeature, ISetResponseMessageFeature
     {
         public int ResultCode { get; set; } = 200;
 

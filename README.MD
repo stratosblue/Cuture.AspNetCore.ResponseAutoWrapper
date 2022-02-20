@@ -165,10 +165,10 @@ app.UseResponseAutoWrapper(options =>
 
 #### 方式一：使用`继承接口`实现自定义`TResponse`
 
- - 定义类型，并按需继承`ISetResponseCode`, `ISetResponseData`, `ISetResponseMessage`
+ - 定义类型，并按需继承`ISetResponseCodeFeature`, `ISetResponseDataFeature`, `ISetResponseMessageFeature`
 
     ```C#
-    public class CustomResponse<TData> : ISetResponseCode, ISetResponseData, ISetResponseMessage
+    public class CustomResponse<TData> : ISetResponseCodeFeature, ISetResponseDataFeature, ISetResponseMessageFeature
     {
         public int ResultCode { get; set; } = 200;
         public TData Result { get; set; }

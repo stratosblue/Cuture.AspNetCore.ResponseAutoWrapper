@@ -65,7 +65,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <summary>
         /// 添加响应自动包装器<para/>
         /// 使用指定的响应类型 <typeparamref name="TResponse"/> ，并使用默认的 <see cref="IResponseCreator{TResponse}"/><para/>
-        /// <typeparamref name="TResponse"/> 需要按需实现<see cref="ISetResponseCode"/>、<see cref="ISetResponseMessage"/>、<see cref="ISetResponseData"/>
+        /// <typeparamref name="TResponse"/> 需要按需实现<see cref="ISetResponseCodeFeature"/>、<see cref="ISetResponseMessageFeature"/>、<see cref="ISetResponseDataFeature"/>
         /// </summary>
         /// <typeparam name="TResponse"></typeparam>
         /// <param name="services"></param>

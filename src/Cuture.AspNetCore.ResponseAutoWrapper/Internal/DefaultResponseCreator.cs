@@ -19,8 +19,8 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
         {
             var response = new TResponse();
 
-            (response as ISetResponseCode)?.SetCode(code);
-            (response as ISetResponseMessage)?.SetMessage(message);
+            (response as ISetResponseCodeFeature)?.SetCode(code);
+            (response as ISetResponseMessageFeature)?.SetMessage(message);
 
             return response;
         }
@@ -31,9 +31,9 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal
         {
             var response = new TResponse();
 
-            (response as ISetResponseCode)?.SetCode(code);
-            (response as ISetResponseMessage)?.SetMessage(message);
-            (response as ISetResponseData)?.SetData(data);
+            (response as ISetResponseCodeFeature)?.SetCode(code);
+            (response as ISetResponseMessageFeature)?.SetMessage(message);
+            (response as ISetResponseDataFeature)?.SetData(data);
 
             return response;
         }
