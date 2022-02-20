@@ -11,7 +11,7 @@
 ![执行流程概览](./execution_flow.png)
 
 ## 2. 注意项
-- 目标框架`net5.0`、`netcoreapp3.1`
+- 目标框架`net6.0`、`net5.0`、`netcoreapp3.1`
 - 包装功能由两个包装器实现：
     - 基于`ResultFilter`的`ActionResult`包装器：针对方法的返回值包装；
     - 基于`中间件`的包装器：针对异常、非200响应包装；
