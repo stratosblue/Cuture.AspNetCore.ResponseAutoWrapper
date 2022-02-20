@@ -60,7 +60,7 @@ namespace Microsoft.AspNetCore.Mvc.Filters
             //HACK 不加锁读取 ActionDescriptor.Properties ，可能存在某些问题
             if (context.ActionDescriptor.Properties.TryGetValue(Constants.ActionPropertiesResultPolicyKey, out var cachedPolicy))
             {
-                return (ActionResultPolicy)cachedPolicy;
+                return (ActionResultPolicy)cachedPolicy!;
             }
 
             //HACK 理论上不应该执行到这里
