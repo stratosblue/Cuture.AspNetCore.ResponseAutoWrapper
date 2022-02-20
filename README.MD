@@ -113,6 +113,7 @@ app.UseResponseAutoWrapper(options =>
     //配置
     //options.CatchExceptions 是否捕获异常
     //options.ThrowCaughtExceptions 捕获到异常处理结束后，是否再将异常抛出
+    //options.DefaultOutputFormatterSelector 默认输出格式化器选择委托，选择在请求中无 Accept 时，用于格式化响应的 IOutputFormatter
 });
 ```
 
@@ -252,7 +253,6 @@ app.UseResponseAutoWrapper(options =>
 - `IInvalidModelStateWrapper<TResponse>`: 模型验证失败时的响应包装器；
 - `INotOKStatusCodeWrapper<TResponse>`: 非200状态码时的响应包装器；
 - `IExceptionMessageProvider`: 从异常解析返回消息的消息提供器；
-- `IResponseDirectWriter`: 用于中间件中写入响应，默认为写入json；
 - `IWrapTypeCreator`: 确认Action返回对象类型是否需要包装，以及创建OpenAPI展示的泛型类；
 
 ## 5. 性能测试结果

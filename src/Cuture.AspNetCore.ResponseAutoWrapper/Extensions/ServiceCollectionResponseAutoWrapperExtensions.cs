@@ -128,8 +128,6 @@ namespace Microsoft.Extensions.DependencyInjection
             //Add IResponseCreator
             services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IResponseCreator<TResponse>), typeof(TResponseCreator)));
 
-            services.TryAddSingleton<IResponseDirectWriter, DefaultResponseDirectWriter>();
-
             //Add action result filter
             services.TryAddSingleton<ResponseAutoWrapResultFilter<TResponse>>();
 
