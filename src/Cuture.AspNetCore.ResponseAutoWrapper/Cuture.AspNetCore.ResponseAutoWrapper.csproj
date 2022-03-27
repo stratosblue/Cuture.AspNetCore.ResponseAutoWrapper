@@ -19,6 +19,8 @@
 
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
+
+    <PackageTags>response-wrapper autowrap autowrapper auto-wrapper response-auto-wrapper asp-net-core</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
