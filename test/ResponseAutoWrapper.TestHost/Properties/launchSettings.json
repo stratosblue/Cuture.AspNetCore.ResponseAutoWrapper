@@ -1,21 +1,69 @@
 ﻿{
   "profiles": {
-    "ResponseAutoWrapper.TestHost": {
+    "TestHost.DefaultStartup": {
       "commandName": "Project",
-      //"commandLineArgs": "DefaultStartup",
-      //"commandLineArgs": "NoWrapperStartup",
-      //"commandLineArgs": "MiddlewareExceptionStartup",
-      //"commandLineArgs": "CRIStartup",
-      //"commandLineArgs": "CRCStartup",
-      //"commandLineArgs": "DisableOpenAPISupportStartup",
-      //"commandLineArgs": "NotGenericCRCStartup",
-      //"commandLineArgs": "NotGenericCRIStartup",
+      "commandLineArgs": "DefaultStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.NoWrapperStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "NoWrapperStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.MiddlewareExceptionStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "MiddlewareExceptionStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.CRIStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "CRIStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.CRCStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "CRCStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.DisableOpenAPISupportStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "DisableOpenAPISupportStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.NotGenericCRCStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "NotGenericCRCStartup",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "TestHost.NotGenericCRIStartup": {
+      "commandName": "Project",
+      "commandLineArgs": "NotGenericCRIStartup",
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "dotnetRunMessages": "true",
-      "applicationUrl": "http://0.0.0.0:5000"
+      "applicationUrl": "http://localhost:5000"
     }
   }
 }

@@ -51,6 +51,16 @@ internal class ActionResultPolicyTagAppModelConvention : IApplicationModelConven
     #region Protected 方法
 
     /// <summary>
+    /// 设置Action的Result处理策略
+    /// </summary>
+    /// <param name="action"></param>
+    /// <param name="policy"></param>
+    protected static void SetActionResultPolicy(ActionModel action, ActionResultPolicy policy)
+    {
+        action.Properties[Constants.ActionPropertiesResultPolicyKey] = policy;
+    }
+
+    /// <summary>
     /// 在Action需要包装时触发的函数
     /// </summary>
     /// <param name="action">Action</param>
@@ -71,18 +81,13 @@ internal class ActionResultPolicyTagAppModelConvention : IApplicationModelConven
             || _actionNoWrapPredicate(action.Controller.ControllerType)
             || !WrapTypeCreator.ShouldWrap(returnType))
         {
-            SetActionResultPolicy(ActionResultPolicy.Skip);
+            SetActionResultPolicy(action, ActionResultPolicy.Skip);
             return;
         }
 
-        SetActionResultPolicy(returnType == typeof(object) ? ActionResultPolicy.Unknown : ActionResultPolicy.Process);
+        SetActionResultPolicy(action, returnType == typeof(object) ? ActionResultPolicy.Unknown : ActionResultPolicy.Process);
 
         OnActionShouldWrap(action, returnType);
-
-        void SetActionResultPolicy(ActionResultPolicy policy)
-        {
-            action.Properties[Constants.ActionPropertiesResultPolicyKey] = policy;
-        }
     }
 
     #endregion Private 方法

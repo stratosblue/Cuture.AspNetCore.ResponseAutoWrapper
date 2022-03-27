@@ -170,7 +170,7 @@ internal class ResponseAutoWrapMiddleware
         return result;
     }
 
-    private async Task WriteResponseWithFormatterAsync(HttpContext context, object response)
+    private Task WriteResponseWithFormatterAsync(HttpContext context, object response)
     {
         var formatterContext = new OutputFormatterWriteContext(context,
                                                                _httpResponseStreamWriterFactory.CreateWriter,
@@ -190,7 +190,7 @@ internal class ResponseAutoWrapMiddleware
                                                                          accepts)
                                     ?? _defaultOutputFormatter;
 
-        await selectedFormatter.WriteAsync(formatterContext);
+        return selectedFormatter.WriteAsync(formatterContext);
     }
 
     #endregion Internal

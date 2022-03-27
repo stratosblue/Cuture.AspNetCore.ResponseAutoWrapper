@@ -25,7 +25,7 @@ public class DefaultInvalidModelStateWrapper<TResponse> : IInvalidModelStateWrap
 
     /// <inheritdoc cref="DefaultInvalidModelStateWrapper{TResponse}"/>
     public DefaultInvalidModelStateWrapper(IResponseCreator<TResponse> responseCreator,
-                                           IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
+                                           IOptions<ResponseAutoWrapperOptions> optionsAccessor)
     {
         _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
         _rewriteStatusCode = optionsAccessor?.Value?.RewriteStatusCode;

@@ -25,7 +25,7 @@ public sealed class DefaultExceptionWrapper<TResponse> : IExceptionWrapper<TResp
     /// <inheritdoc cref="DefaultExceptionWrapper{TResponse}"/>
     public DefaultExceptionWrapper(IResponseCreator<TResponse> responseCreator,
                                    IExceptionMessageProvider exceptionMessageProvider,
-                                   IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
+                                   IOptions<ResponseAutoWrapperOptions> optionsAccessor)
     {
         _responseCreator = responseCreator ?? throw new ArgumentNullException(nameof(responseCreator));
         _exceptionMessageProvider = exceptionMessageProvider ?? throw new ArgumentNullException(nameof(exceptionMessageProvider));

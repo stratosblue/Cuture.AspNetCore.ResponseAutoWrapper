@@ -24,7 +24,7 @@ public class DefaultNotOKStatusCodeWrapper<TResponse> : INotOKStatusCodeWrapper<
 
     /// <inheritdoc cref="DefaultNotOKStatusCodeWrapper{TResponse}"/>
     public DefaultNotOKStatusCodeWrapper(IResponseCreator<TResponse> responseCreator,
-                                         IOptionsSnapshot<ResponseAutoWrapperOptions> optionsAccessor)
+                                         IOptions<ResponseAutoWrapperOptions> optionsAccessor)
     {
         _responseCreator = responseCreator;
 

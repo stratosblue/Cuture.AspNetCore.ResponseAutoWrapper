@@ -31,22 +31,12 @@ internal class ResponseAutoWrapResultFilter<TResponse> : IAsyncAlwaysRunResultFi
     /// <inheritdoc/>
     public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        switch (GetActionResultPolicy(context))
+        if (GetActionResultPolicy(context) != ActionResultPolicy.Skip
+            && _actionResultWrapper.Wrap(context) is TResponse response)
         {
-            case ActionResultPolicy.Skip:
-                break;
-
-            case ActionResultPolicy.Process:
-            case ActionResultPolicy.Unknown:
-            default:
-                {
-                    if (_actionResultWrapper.Wrap(context) is TResponse response)
-                    {
-                        context.Result = new OkObjectResult(response);
-                    }
-                }
-                break;
+            context.Result = new OkObjectResult(response);
         }
+
         await next();
     }
 

@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using System;
+using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Mvc;
 
 /// <summary>
 /// API响应
 /// </summary>
+[Serializable]
 public abstract class ApiResponse
 {
     #region Public 属性
@@ -74,6 +76,7 @@ public abstract class ApiResponse
 /// 有数据的API响应
 /// </summary>
 /// <typeparam name="TData"></typeparam>
+[Serializable]
 public class ApiResponse<TData> : ApiResponse
 {
     #region Public 属性
