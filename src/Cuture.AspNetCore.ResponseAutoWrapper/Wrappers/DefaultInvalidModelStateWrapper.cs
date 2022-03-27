@@ -38,7 +38,7 @@ public class DefaultInvalidModelStateWrapper<TResponse> : IInvalidModelStateWrap
     /// <inheritdoc/>
     public TResponse? Wrap(ActionContext context)
     {
-        if (context.HttpContext.IsSetDoNotWrap())
+        if (context.HttpContext.IsSetDoNotWrapResponse())
         {
             return null;
         }

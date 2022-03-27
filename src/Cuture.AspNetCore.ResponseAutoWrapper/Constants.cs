@@ -23,7 +23,7 @@ public static class Constants
     /// <summary>
     /// <see cref="HttpContext.Items"/> 中存放不包装响应内容的标记的Key
     /// </summary>
-    public const string HttpContextDoNotWrapMarkKey = "HTTPCONTEXT_DO_NOT_WRAP_MARK_KEY";
+    public const string HttpContextDoNotWrapResponseMarkKey = "HTTPCONTEXT_DO_NOT_WRAP_RESPONSE_MARK_KEY";
 
     #endregion Public 字段
 }

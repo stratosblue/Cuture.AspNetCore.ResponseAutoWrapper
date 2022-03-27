@@ -39,7 +39,7 @@ public sealed class DefaultExceptionWrapper<TResponse> : IExceptionWrapper<TResp
     /// <inheritdoc/>
     public TResponse? Wrap(HttpContext httpContext, Exception exception)
     {
-        if (httpContext.IsSetDoNotWrap())
+        if (httpContext.IsSetDoNotWrapResponse())
         {
             return null;
         }

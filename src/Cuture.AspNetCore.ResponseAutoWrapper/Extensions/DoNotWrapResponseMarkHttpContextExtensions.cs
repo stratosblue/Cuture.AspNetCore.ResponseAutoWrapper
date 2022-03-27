@@ -7,7 +7,7 @@ namespace Microsoft.AspNetCore.Http;
 /// <summary>
 /// 标记不包装响应的HttpContext拓展
 /// </summary>
-public static class DoNotWrapMarkHttpContextExtensions
+public static class DoNotWrapResponseMarkHttpContextExtensions
 {
     //TODO add test for this
 
@@ -18,11 +18,11 @@ public static class DoNotWrapMarkHttpContextExtensions
     /// </summary>
     /// <param name="httpContext"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static void DoNotWrap(this HttpContext httpContext)
+    public static void DoNotWrapResponse(this HttpContext httpContext)
     {
-        if (!httpContext.Items.ContainsKey(Constants.HttpContextDoNotWrapMarkKey))
+        if (!httpContext.Items.ContainsKey(Constants.HttpContextDoNotWrapResponseMarkKey))
         {
-            httpContext.Items.Add(Constants.HttpContextDoNotWrapMarkKey, string.Empty);
+            httpContext.Items.Add(Constants.HttpContextDoNotWrapResponseMarkKey, string.Empty);
         }
     }
 
@@ -31,7 +31,7 @@ public static class DoNotWrapMarkHttpContextExtensions
     /// </summary>
     /// <param name="httpContext"></param>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsSetDoNotWrap(this HttpContext httpContext) => httpContext.Items.ContainsKey(Constants.HttpContextDoNotWrapMarkKey);
+    public static bool IsSetDoNotWrapResponse(this HttpContext httpContext) => httpContext.Items.ContainsKey(Constants.HttpContextDoNotWrapResponseMarkKey);
 
     #endregion Public 方法
 }

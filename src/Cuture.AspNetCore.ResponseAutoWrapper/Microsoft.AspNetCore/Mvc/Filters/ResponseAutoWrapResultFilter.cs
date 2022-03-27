@@ -35,7 +35,7 @@ internal class ResponseAutoWrapResultFilter<TResponse> : IAsyncAlwaysRunResultFi
     {
         if (GetActionResultPolicy(context) == ActionResultPolicy.Skip)
         {
-            context.HttpContext.DoNotWrap();
+            context.HttpContext.DoNotWrapResponse();
             return next();
         }
 
