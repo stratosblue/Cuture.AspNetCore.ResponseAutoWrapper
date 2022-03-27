@@ -39,6 +39,11 @@ public sealed class DefaultExceptionWrapper<TResponse> : IExceptionWrapper<TResp
     /// <inheritdoc/>
     public TResponse? Wrap(HttpContext httpContext, Exception exception)
     {
+        if (httpContext.IsSetDoNotWrap())
+        {
+            return null;
+        }
+
         if (_rewriteStatusCode.HasValue)
         {
             httpContext.Response.StatusCode = _rewriteStatusCode.Value;

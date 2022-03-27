@@ -110,6 +110,11 @@ public class DefaultNotOKStatusCodeWrapper<TResponse> : INotOKStatusCodeWrapper<
     /// <inheritdoc/>
     public TResponse? Wrap(HttpContext context)
     {
+        if (context.IsSetDoNotWrap())
+        {
+            return null;
+        }
+
         var code = context.Response.StatusCode;
         if (StatusCodeCheck(code))
         {

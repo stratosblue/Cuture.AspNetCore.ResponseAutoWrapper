@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 
 using Cuture.AspNetCore.ResponseAutoWrapper;
 
+using Microsoft.AspNetCore.Http;
+
 namespace Microsoft.AspNetCore.Mvc.Filters;
 
 internal class ResponseAutoWrapResultFilter<TResponse> : IAsyncAlwaysRunResultFilter
@@ -29,15 +31,20 @@ internal class ResponseAutoWrapResultFilter<TResponse> : IAsyncAlwaysRunResultFi
     #region Public 方法
 
     /// <inheritdoc/>
-    public async Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
+    public Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
     {
-        if (GetActionResultPolicy(context) != ActionResultPolicy.Skip
-            && _actionResultWrapper.Wrap(context) is TResponse response)
+        if (GetActionResultPolicy(context) == ActionResultPolicy.Skip)
+        {
+            context.HttpContext.DoNotWrap();
+            return next();
+        }
+
+        if (_actionResultWrapper.Wrap(context) is TResponse response)
         {
             context.Result = new OkObjectResult(response);
         }
 
-        await next();
+        return next();
     }
 
     #endregion Public 方法

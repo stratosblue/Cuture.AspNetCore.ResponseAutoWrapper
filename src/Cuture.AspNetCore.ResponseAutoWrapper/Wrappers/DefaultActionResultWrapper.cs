@@ -37,6 +37,11 @@ public class DefaultActionResultWrapper<TResponse> : IActionResultWrapper<TRespo
     /// <inheritdoc/>
     public TResponse? Wrap(ResultExecutingContext context)
     {
+        if (context.HttpContext.IsSetDoNotWrap())
+        {
+            return null;
+        }
+
         var actionResult = context.Result;
         if (actionResult is ObjectResult objectResult)
         {

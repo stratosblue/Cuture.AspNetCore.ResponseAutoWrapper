@@ -36,8 +36,13 @@ public class DefaultInvalidModelStateWrapper<TResponse> : IInvalidModelStateWrap
     #region Public 方法
 
     /// <inheritdoc/>
-    public TResponse Wrap(ActionContext context)
+    public TResponse? Wrap(ActionContext context)
     {
+        if (context.HttpContext.IsSetDoNotWrap())
+        {
+            return null;
+        }
+
         if (_rewriteStatusCode.HasValue)
         {
             context.HttpContext.Response.StatusCode = _rewriteStatusCode.Value;

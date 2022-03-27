@@ -259,6 +259,12 @@ app.UseResponseAutoWrapper(options =>
 - `IExceptionMessageProvider`: 从异常解析返回消息的消息提供器；
 - `IWrapTypeCreator`: 确认Action返回对象类型是否需要包装，以及创建OpenAPI展示的泛型类；
 
+### 4.4 动态取消包装
+调用 `HttpContext` 的拓展方法 `DoNotWrap` ，以动态的取消对当前响应的包装；使用拓展方法 `IsSetDoNotWrap` 可以检查当前上下文是否已标记为不包装响应值；
+```C#
+HttpContext.DoNotWrap();
+```
+
 ## 5. 性能测试结果
 
 - 系统：`Ubuntu20.04 on WSL2` host by Windows10-21H1
