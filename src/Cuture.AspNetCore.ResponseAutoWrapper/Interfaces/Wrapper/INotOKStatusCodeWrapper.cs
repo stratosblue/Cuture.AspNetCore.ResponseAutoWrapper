@@ -6,7 +6,9 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// <see cref="HttpResponse.StatusCode"/> 非 <see cref="StatusCodes.Status200OK"/> 时的响应包装器
 /// </summary>
 /// <typeparam name="TResponse">统一响应类型</typeparam>
-public interface INotOKStatusCodeWrapper<TResponse> : IWrapper<TResponse>
+/// <typeparam name="TCode">Code类型</typeparam>
+/// <typeparam name="TMessage">Message类型</typeparam>
+public interface INotOKStatusCodeWrapper<TResponse, TCode, TMessage> : IWrapper<TResponse, TCode, TMessage>
 {
     /// <summary>
     /// 通过 <see cref="HttpContext"/> 返回包装后的统一响应

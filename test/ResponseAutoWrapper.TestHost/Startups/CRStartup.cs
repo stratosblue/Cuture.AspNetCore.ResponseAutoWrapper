@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class CRCStartup : BaseStartup
+public class CRStartup : BaseStartup
 {
-    public CRCStartup(IConfiguration configuration) : base(configuration)
+    public CRStartup(IConfiguration configuration) : base(configuration)
     {
     }
 
@@ -21,6 +21,7 @@ public class CRCStartup : BaseStartup
     {
         base.ConfigureServices(services);
 
-        services.AddResponseAutoWrapper<CustomResponse<object>, CustomResponseCreator>();
+        services.AddResponseAutoWrapper<CustomResponse<object>, ResponseCode, ResponseMessage>()
+                .ConfigureWrappers(builder => builder.AddWrappers<CustomResponseWrapper>());
     }
 }

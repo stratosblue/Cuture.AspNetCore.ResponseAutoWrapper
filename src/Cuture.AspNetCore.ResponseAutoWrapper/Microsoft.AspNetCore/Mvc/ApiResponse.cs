@@ -1,4 +1,5 @@
 ﻿using System;
+
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Mvc;
@@ -7,21 +8,16 @@ namespace Microsoft.AspNetCore.Mvc;
 /// API响应
 /// </summary>
 [Serializable]
-public abstract class ApiResponse
+public class ApiResponse : ApiResponse<object>
 {
-    #region Public 属性
+    #region Public 构造函数
 
-    /// <summary>
-    /// 状态码
-    /// </summary>
-    public int Code { get; set; } = StatusCodes.Status200OK;
+    /// <inheritdoc cref="ApiResponse"/>
+    public ApiResponse(int code) : base(code)
+    {
+    }
 
-    /// <summary>
-    /// 消息
-    /// </summary>
-    public string? Message { get; set; }
-
-    #endregion Public 属性
+    #endregion Public 构造函数
 
     #region Public 方法
 
@@ -77,14 +73,19 @@ public abstract class ApiResponse
 /// </summary>
 /// <typeparam name="TData"></typeparam>
 [Serializable]
-public class ApiResponse<TData> : ApiResponse
+public class ApiResponse<TData> : GenericApiResponse<int, string, TData>
 {
-    #region Public 属性
+    #region Public 构造函数
 
-    /// <summary>
-    /// 数据
-    /// </summary>
-    public TData? Data { get; set; }
+    /// <inheritdoc cref="ApiResponse"/>
+    public ApiResponse() : this(StatusCodes.Status200OK)
+    {
+    }
 
-    #endregion Public 属性
+    /// <inheritdoc cref="ApiResponse"/>
+    public ApiResponse(int code) : base(code)
+    {
+    }
+
+    #endregion Public 构造函数
 }

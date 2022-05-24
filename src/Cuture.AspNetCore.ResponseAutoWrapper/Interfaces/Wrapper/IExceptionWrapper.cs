@@ -8,7 +8,9 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// 异常包装器
 /// </summary>
 /// <typeparam name="TResponse">统一响应类型</typeparam>
-public interface IExceptionWrapper<TResponse> : IWrapper<TResponse>
+/// <typeparam name="TCode">Code类型</typeparam>
+/// <typeparam name="TMessage">Message类型</typeparam>
+public interface IExceptionWrapper<TResponse, TCode, TMessage> : IWrapper<TResponse, TCode, TMessage>
 {
     /// <summary>
     /// 通过 <see cref="HttpContext"/> 和 <see cref="Exception"/> 返回包装后的统一响应

@@ -29,6 +29,7 @@ public class CustomResponseByResponseCreatorMiddlewareExceptionStartup : BaseSta
     {
         base.ConfigureServices(services);
 
-        services.AddResponseAutoWrapper<CustomResponse<object>, CustomResponseCreator>();
+        services.AddResponseAutoWrapper<LegacyCustomResponse<object>, int, string>()
+                .ConfigureWrappers(builder => builder.AddLegacyWrappers<LegacyCustomResponseWrapper>());
     }
 }

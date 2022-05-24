@@ -20,9 +20,9 @@ public class WeatherForecastController : GenericWeatherForecastController
 
     [HttpGet]
     [Route("get-direct-inherited-api-response")]
-    public InheritedApiResponse GetDirectInheritedApiResponse()
+    public InheritedLegacyResponse GetDirectInheritedApiResponse()
     {
-        return new InheritedApiResponse()
+        return new InheritedLegacyResponse()
         {
             Data = WeatherForecast.GenerateData()
         };
@@ -41,7 +41,7 @@ public class WeatherForecastController : GenericWeatherForecastController
         {
             0 => WeatherForecast.GenerateData(),
             1 => ApiResponse.Create(WeatherForecast.GenerateData()),
-            2 => new InheritedApiResponse() { Data = WeatherForecast.GenerateData() },
+            2 => new InheritedLegacyResponse() { Data = WeatherForecast.GenerateData() },
             _ => WeatherForecast.GenerateData(),
         };
     }

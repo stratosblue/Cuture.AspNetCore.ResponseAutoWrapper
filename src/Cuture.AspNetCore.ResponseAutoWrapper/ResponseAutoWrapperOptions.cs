@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 using Microsoft.AspNetCore.Http;
@@ -24,15 +23,6 @@ public class ResponseAutoWrapperOptions
     private Func<MemberInfo, bool>? _actionNoWrapPredicate;
 
     #endregion Private 字段
-
-    #region Internal 属性
-
-    /// <summary>
-    /// 包装器类型列表
-    /// </summary>
-    internal List<Type> Wrappers { get; } = new();
-
-    #endregion Internal 属性
 
     #region Public 属性
 
@@ -63,8 +53,8 @@ public class ResponseAutoWrapperOptions
 
     /// <summary>
     /// 处理无效模型绑定状态<para/>
-    /// 设置 <see cref="ApiBehaviorOptions.InvalidModelStateResponseFactory"/> 为使用 <see cref="IInvalidModelStateWrapper{TResponse}"/> 处理的委托<para/>
-    /// 可以通过注入自定义的 <see cref="IInvalidModelStateWrapper{TResponse}"/> 替换默认行为<para/>
+    /// 设置 <see cref="ApiBehaviorOptions.InvalidModelStateResponseFactory"/> 为使用 <see cref="IInvalidModelStateWrapper{TResponse, TCode, TMessage}"/> 处理的委托<para/>
+    /// 可以通过注入自定义的 <see cref="IInvalidModelStateWrapper{TResponse, TCode, TMessage}"/> 替换默认行为<para/>
     /// </summary>
     /// <value>default value is 'true'</value>
     public bool HandleInvalidModelState { get; set; } = true;

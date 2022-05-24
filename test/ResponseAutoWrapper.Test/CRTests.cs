@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Cuture.AspNetCore.ResponseAutoWrapper;
 using Cuture.Http;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,13 +15,14 @@ using ResponseAutoWrapper.TestHost;
 
 namespace ResponseAutoWrapper.Test;
 
-//Copy from CRITests
+// Copy from LCRTest
+
 [TestClass]
-public class CRCTest : TestServerBase
+public class CRTest : TestServerBase
 {
     #region Public 属性
 
-    public virtual string UriPrefix { get; set; } = "/api/CRCWeatherForecast";
+    public virtual string UriPrefix { get; set; } = "/api/CRWeatherForecast";
 
     #endregion Public 属性
 
@@ -43,11 +43,11 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response, 10086);
+        CheckResponseCode(response, new(ResponseState.Success, 10086));
 
-        Assert.AreEqual("Hello world!", response.Info);
+        Assert.AreEqual("Hello world!", response.Message?.Text);
 
-        Debug.WriteLine(response.Info);
+        Debug.WriteLine(response.Message);
     }
 
     [TestMethod]
@@ -76,8 +76,8 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response);
-        CheckWeatherForecast(response.Datas);
+        CheckResponseCode(response, ResponseCode.Success);
+        CheckWeatherForecast(response.Data);
     }
 
     [TestMethod]
@@ -86,11 +86,11 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response, 401);
+        CheckResponseCode(response, new(ResponseState.Error, 25000));
 
-        Assert.IsNull(response.Datas);
+        Assert.IsNull(response.Data);
 
-        Debug.WriteLine($"No authentication Message: {response.Info}");
+        Debug.WriteLine($"No authentication Message: {response.Message.Text}");
 
         #region Cookie
 
@@ -100,9 +100,9 @@ public class CRCTest : TestServerBase
                                .UseCookie(cookie)
                                .GetAsObjectAsync<CustomResponse<WeatherForecast[]>>();
 
-        CheckResponseCode(response, 403);
+        CheckResponseCode(response, new(ResponseState.Error, 25000));
 
-        Debug.WriteLine($"Cookie can not access Message: {response.Info}");
+        Debug.WriteLine($"Cookie can not access Message: {response.Message}");
 
         cookie = await LoginAsync(true, true);
 
@@ -110,31 +110,31 @@ public class CRCTest : TestServerBase
                                .UseCookie(cookie)
                                .GetAsObjectAsync<CustomResponse<WeatherForecast[]>>();
 
-        CheckResponseCode(response);
-        CheckWeatherForecast(response.Datas);
+        CheckResponseCode(response, ResponseCode.Success);
+        CheckWeatherForecast(response.Data);
 
         #endregion Cookie
 
         #region Jwt
 
-        var token = await LoginAsync(false, false, "datas");
+        var token = await LoginAsync(false, false, "data");
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .UseBearerToken(token)
                                .GetAsObjectAsync<CustomResponse<WeatherForecast[]>>();
 
-        CheckResponseCode(response, 403);
+        CheckResponseCode(response, new(ResponseState.Error, 25000));
 
-        Debug.WriteLine($"Jwt can not access Message: {response.Info}");
+        Debug.WriteLine($"Jwt can not access Message: {response.Message}");
 
-        token = await LoginAsync(true, false, "datas");
+        token = await LoginAsync(true, false, "data");
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .AddHeader("Authorization", $"Bearer {token}")
                                .GetAsObjectAsync<CustomResponse<WeatherForecast[]>>();
 
-        CheckResponseCode(response);
-        CheckWeatherForecast(response.Datas);
+        CheckResponseCode(response, ResponseCode.Success);
+        CheckWeatherForecast(response.Data);
 
         #endregion Jwt
     }
@@ -147,9 +147,9 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response, 400);
+        CheckResponseCode(response, new(ResponseState.Error, 20000));
 
-        Debug.WriteLine(response.Info);
+        Debug.WriteLine(response.Message);
     }
 
     [TestMethod]
@@ -159,11 +159,11 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response, 401);
+        CheckResponseCode(response, new(ResponseState.Error, 25000));
 
-        Assert.IsNull(response.Datas);
+        Assert.IsNull(response.Data);
 
-        Debug.WriteLine(response.Info);
+        Debug.WriteLine(response.Message);
     }
 
     [TestMethod]
@@ -172,9 +172,9 @@ public class CRCTest : TestServerBase
     {
         var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
-        CheckResponseCode(response, 500);
+        CheckResponseCode(response, new(ResponseState.Error, 30000));
 
-        Debug.WriteLine(response.Info);
+        Debug.WriteLine(response.Message);
     }
 
     [TestMethod]
@@ -190,18 +190,24 @@ public class CRCTest : TestServerBase
 
     #region Protected 方法
 
-    protected static void CheckResponseCode([NotNull] CustomResponse<WeatherForecast[]>? apiResponse, int code = StatusCodes.Status200OK)
+    protected static void CheckResponseCode([NotNull] CustomResponse<WeatherForecast[]>? apiResponse, ResponseCode code)
     {
         Assert.IsNotNull(apiResponse);
-        Assert.AreEqual(code, apiResponse.StatusCode);
+        Assert.AreEqual(code.State, apiResponse.Code.State);
+        Assert.AreEqual(code.BusinessCode, apiResponse.Code.BusinessCode);
     }
 
+    [DebuggerStepThrough]
     protected string CombineUri(string path) => $"{UriPrefix}{path}";
 
     protected override async Task<IHostBuilder> CreateServerHostBuilderAsync()
     {
         var builder = await CreateServerHost();
-        builder.ConfigureServices(services => services.AddResponseAutoWrapper<CustomResponse<object>, CustomResponseCreator>(GetOptionsSetupAction()));
+        builder.ConfigureServices(services =>
+        {
+            services.AddResponseAutoWrapper<CustomResponse<object>, ResponseCode, ResponseMessage>(GetOptionsSetupAction())
+                    .ConfigureWrappers(builder => builder.AddWrappers<CustomResponseWrapper>());
+        });
         return builder;
     }
 
@@ -214,7 +220,7 @@ public class CRCTest : TestServerBase
 }
 
 [TestClass]
-public class CRCTest_DisableOpenAPISupport : CRCTest
+public class CRTest_DisableOpenAPISupport : CRTest
 {
     #region Protected 方法
 
@@ -227,17 +233,17 @@ public class CRCTest_DisableOpenAPISupport : CRCTest
 }
 
 [TestClass]
-public class CRCTest_NotGeneric : CRCTest
+public class CRTest_NotGeneric : CRTest
 {
     #region Public 属性
 
-    public override string UriPrefix { get; set; } = "/api/NGCRCWeatherForecast";
+    public override string UriPrefix { get; set; } = "/api/NGCRWeatherForecast";
 
     #endregion Public 属性
 
     #region Protected 方法
 
-    protected override Task<IHostBuilder> CreateServerHostBuilderAsync() => CreateServerHostWithStartup<NotGenericCRCStartup>();
+    protected override Task<IHostBuilder> CreateServerHostBuilderAsync() => CreateServerHostWithStartup<NotGenericCRStartup>();
 
     #endregion Protected 方法
 }

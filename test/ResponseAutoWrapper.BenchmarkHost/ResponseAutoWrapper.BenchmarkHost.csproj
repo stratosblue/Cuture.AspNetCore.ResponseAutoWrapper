@@ -12,6 +12,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Cuture.AspNetCore.ResponseAutoWrapper\Cuture.AspNetCore.ResponseAutoWrapper.csproj" />
 
-    <PackageReference Include="AutoWrapper.Core" Version="5.0.0-rc-02" />
+    <PackageReference Include="AutoWrapper.Core" Version="5.0.0-rc-03" />
   </ItemGroup>
 </Project>

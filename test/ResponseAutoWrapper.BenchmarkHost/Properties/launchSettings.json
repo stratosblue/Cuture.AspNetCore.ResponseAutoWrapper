@@ -1,16 +1,30 @@
-﻿{
+{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
-    "ResponseAutoWrapper.BenchmarkHost": {
+    "BenchmarkHost - NoWrapper": {
+      "commandName": "Project",
+      "commandLineArgs": "NoWrapperStartup",
+      "environmentVariables": {},
+      "applicationUrl": "http://0.0.0.0:5000"
+    },
+    "BenchmarkHost - AutoWrapperCore": {
       "commandName": "Project",
       "commandLineArgs": "AutoWrapperCoreStartup",
-      //"commandLineArgs": "ResponseAutoWrapperStartup",
-      //"commandLineArgs": "AutoWrapperCoreStartup",
-      //"commandLineArgs": "NoWrapperStartup",
-      "applicationUrl": "http://0.0.0.0:5000",
+      "environmentVariables": {},
+      "applicationUrl": "http://0.0.0.0:5000"
+    },
+    "BenchmarkHost - ResponseAutoWrapper": {
+      "commandName": "Project",
+      "commandLineArgs": "ResponseAutoWrapperStartup",
+      "environmentVariables": {},
+      "applicationUrl": "http://0.0.0.0:5000"
+    },
+    "WSL": {
+      "commandName": "WSL2",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+        "ASPNETCORE_URLS": "http://0.0.0.0:5000"
+      },
+      "distributionName": ""
     }
   }
 }

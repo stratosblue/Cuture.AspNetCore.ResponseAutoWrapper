@@ -10,38 +10,15 @@ using ResponseAutoWrapper.TestHost;
 namespace ResponseAutoWrapper.Test;
 
 [TestClass]
-public class MiddlewareExceptionCustomResponseByInterfaceTest : TestServerBase
-{
-    #region Public 方法
-
-    [TestMethod]
-    [DataRow("/api/CRIWeatherForecast/get")]
-    public async Task Should_Wrapped500(string requestPath)
-    {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(requestPath);
-
-        Assert.AreEqual(500, response.ResultCode);
-    }
-
-    #endregion Public 方法
-
-    #region Protected 方法
-
-    protected override Task<IHostBuilder> CreateServerHostBuilderAsync() => CreateServerHostWithStartup<CustomResponseByInterfaceMiddlewareExceptionStartup>();
-
-    #endregion Protected 方法
-}
-
-[TestClass]
 public class MiddlewareExceptionCustomResponseByResponseCreatorTest : TestServerBase
 {
     #region Public 方法
 
     [TestMethod]
-    [DataRow("/api/CRCWeatherForecast/get")]
+    [DataRow("/api/LCRWeatherForecast/get")]
     public async Task Should_Wrapped500(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponse<WeatherForecast[]>>(requestPath);
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(requestPath);
 
         Assert.AreEqual(500, response.StatusCode);
     }

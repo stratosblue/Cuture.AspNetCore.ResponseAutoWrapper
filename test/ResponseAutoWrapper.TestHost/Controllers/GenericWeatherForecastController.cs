@@ -165,7 +165,7 @@ public abstract class GenericWeatherForecastController : ControllerBase
 
     #region Protected 方法
 
-    protected TResult DescribeResponse<TResult>(TResult result)
+    protected virtual TResult DescribeResponse<TResult>(TResult result)
     {
         HttpContext.DescribeResponse(CustomCode, CustomMessage);
         return result;

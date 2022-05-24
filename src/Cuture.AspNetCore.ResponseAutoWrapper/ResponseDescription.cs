@@ -3,42 +3,30 @@
 /// <summary>
 /// 响应描述
 /// </summary>
-public class ResponseDescription
+public class ResponseDescription<TCode, TMessage>
 {
-    /// <summary>
-    /// <see cref="Code"/> 为 200 的空描述
-    /// </summary>
-    public static readonly ResponseDescription Empty = new(200);
-
     /// <summary>
     /// Code
     /// </summary>
-    public int Code { get; }
+    public TCode Code { get; }
 
     /// <summary>
     /// 消息
     /// </summary>
-    public string? Message { get; }
+    public TMessage? Message { get; }
 
-    /// <inheritdoc cref="ResponseDescription(int, string?)"/>
-    public ResponseDescription(int code)
+    /// <inheritdoc cref="ResponseDescription(TCode, TMessage?)"/>
+    public ResponseDescription(TCode code)
     {
         Code = code;
     }
 
-    /// <inheritdoc cref="ResponseDescription(int, string?)"/>
-    public ResponseDescription(string? message)
-    {
-        Code = 200;
-        Message = message;
-    }
-
     /// <summary>
-    /// <inheritdoc cref="ResponseDescription"/>
+    /// <inheritdoc cref="ResponseDescription{TCode, TMessage}"/>
     /// </summary>
     /// <param name="code">Code</param>
     /// <param name="message">消息</param>
-    public ResponseDescription(int code, string? message)
+    public ResponseDescription(TCode code, TMessage? message)
     {
         Code = code;
         Message = message;

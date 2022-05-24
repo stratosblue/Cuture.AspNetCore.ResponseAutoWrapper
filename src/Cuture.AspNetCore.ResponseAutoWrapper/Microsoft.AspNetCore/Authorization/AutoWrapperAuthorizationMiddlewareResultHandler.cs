@@ -12,25 +12,25 @@ namespace Microsoft.AspNetCore.Authorization;
 /// </summary>
 internal class AutoWrapperAuthorizationMiddlewareResultHandler : IAuthorizationMiddlewareResultHandler
 {
-#region Public 方法
+    #region Public 方法
 
     /// <inheritdoc/>
-    public async Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
+    public Task HandleAsync(RequestDelegate next, HttpContext context, AuthorizationPolicy policy, PolicyAuthorizationResult authorizeResult)
     {
         if (authorizeResult.Challenged)
         {
             context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-            return;
+            return Task.CompletedTask;
         }
         else if (authorizeResult.Forbidden)
         {
             context.Response.StatusCode = StatusCodes.Status403Forbidden;
-            return;
+            return Task.CompletedTask;
         }
 
-        await next(context);
+        return next(context);
     }
 
-#endregion Public 方法
+    #endregion Public 方法
 }
 #endif

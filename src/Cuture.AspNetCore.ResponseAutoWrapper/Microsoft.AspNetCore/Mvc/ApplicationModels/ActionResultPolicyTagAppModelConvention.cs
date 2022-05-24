@@ -11,7 +11,7 @@ namespace Microsoft.AspNetCore.Mvc.ApplicationModels;
 /// <summary>
 /// 用于标记ActionResult处理策略的ApplicationModelConvention
 /// </summary>
-internal class ActionResultPolicyTagAppModelConvention : IApplicationModelConvention
+internal class ActionResultPolicyTagAppModelConvention<TCode, TMessage> : IApplicationModelConvention
 {
     #region Private 字段
 
@@ -21,13 +21,13 @@ internal class ActionResultPolicyTagAppModelConvention : IApplicationModelConven
 
     #region Protected 属性
 
-    protected IWrapTypeCreator WrapTypeCreator { get; }
+    protected IWrapTypeCreator<TCode, TMessage> WrapTypeCreator { get; }
 
     #endregion Protected 属性
 
     #region Public 构造函数
 
-    public ActionResultPolicyTagAppModelConvention(IWrapTypeCreator wrapTypeCreator, Func<MemberInfo, bool> actionNoWrapPredicate)
+    public ActionResultPolicyTagAppModelConvention(IWrapTypeCreator<TCode, TMessage> wrapTypeCreator, Func<MemberInfo, bool> actionNoWrapPredicate)
     {
         WrapTypeCreator = wrapTypeCreator ?? throw new ArgumentNullException(nameof(wrapTypeCreator));
         _actionNoWrapPredicate = actionNoWrapPredicate ?? throw new ArgumentNullException(nameof(actionNoWrapPredicate));

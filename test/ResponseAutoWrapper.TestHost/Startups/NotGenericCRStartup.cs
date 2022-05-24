@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class CRIStartup : BaseStartup
+public class NotGenericCRStartup : BaseStartup
 {
-    public CRIStartup(IConfiguration configuration) : base(configuration)
+    public NotGenericCRStartup(IConfiguration configuration) : base(configuration)
     {
     }
 
@@ -21,6 +21,7 @@ public class CRIStartup : BaseStartup
     {
         base.ConfigureServices(services);
 
-        services.AddResponseAutoWrapper<CustomResponseI<object>>();
+        services.AddResponseAutoWrapper<CustomResponse, ResponseCode, ResponseMessage>(options => options.DisableOpenAPISupport = true)
+                .ConfigureWrappers(builder => builder.AddWrappers<NotGenericCustomResponseWrapper>());
     }
 }

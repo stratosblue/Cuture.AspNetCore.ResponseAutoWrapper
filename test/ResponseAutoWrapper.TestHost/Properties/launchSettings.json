@@ -24,17 +24,17 @@
       },
       "applicationUrl": "http://localhost:5000"
     },
-    "TestHost.CRIStartup": {
+    "TestHost.LCRStartup": {
       "commandName": "Project",
-      "commandLineArgs": "CRIStartup",
+      "commandLineArgs": "LCRStartup",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
     },
-    "TestHost.CRCStartup": {
+    "TestHost.CRStartup": {
       "commandName": "Project",
-      "commandLineArgs": "CRCStartup",
+      "commandLineArgs": "CRStartup",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
@@ -48,18 +48,17 @@
       },
       "applicationUrl": "http://localhost:5000"
     },
-    "TestHost.NotGenericCRCStartup": {
+    "TestHost.NotGenericLCRStartup": {
       "commandName": "Project",
-      "commandLineArgs": "NotGenericCRCStartup",
+      "commandLineArgs": "NotGenericLCRStartup",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "applicationUrl": "http://localhost:5000"
     },
-    "TestHost.NotGenericCRIStartup": {
+    "TestHost.NotGenericCRStartup": {
       "commandName": "Project",
-      "commandLineArgs": "NotGenericCRIStartup",
-      "launchUrl": "swagger",
+      "commandLineArgs": "NotGenericCRStartup",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

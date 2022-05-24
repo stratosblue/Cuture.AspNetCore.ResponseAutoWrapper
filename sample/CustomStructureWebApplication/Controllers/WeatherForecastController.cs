@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace SimpleWebApplication.Controllers;
+namespace CustomStructureWebApplication.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -27,7 +28,7 @@ public class WeatherForecastController : ControllerBase
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
     {
-        HttpContext.DescribeResponse(10086, "OK");
+        HttpContext.DescribeResponse("E1001", new RichMessage() { Content = "SUCCESS" });
         var rng = new Random();
         return Enumerable.Range(1, 5).Select(index => new WeatherForecast
         {
@@ -40,14 +41,14 @@ public class WeatherForecastController : ControllerBase
 
     [HttpGet]
     [Route("cm")]
-    public ApiResponse GetWithCustomMessage()
+    public CommonResponse<object> GetWithCustomMessage()
     {
-        return EmptyApiResponse.Create(200, "自定义消息");
+        return new CommonResponse<object>() { Code = "E2000", Message = new() { Content = "自定义消息" } };
     }
 
     [HttpGet]
     [Route("ex")]
-    public ApiResponse ThrowException()
+    public CommonResponse<object> ThrowException()
     {
         throw new Exception("Some Exception Throwed.");
     }

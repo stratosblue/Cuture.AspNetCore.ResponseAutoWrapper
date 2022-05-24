@@ -2,22 +2,17 @@
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class InheritedApiResponse : ApiResponse<WeatherForecast[]>
+public class InheritedResponse : GenericApiResponse<ResponseCode, ResponseMessage, WeatherForecast[]>
 {
+    public InheritedResponse() : base(ResponseCode.Success)
+    {
+    }
 }
 
 public class InheritedCustomResponse : CustomResponse<WeatherForecast[]>
 {
 }
 
-public class InheritedCustomResponseI : CustomResponseI<WeatherForecast[]>
-{
-}
-
 public class InheritedCustomResponseNotGeneric : CustomResponse
-{
-}
-
-public class InheritedCustomResponseINotGeneric : CustomResponseI
 {
 }

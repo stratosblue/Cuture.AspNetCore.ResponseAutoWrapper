@@ -1,11 +1,28 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
+using System.Reflection;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal;
 
-internal class DefaultWrapTypeCreator : IWrapTypeCreator
+internal class DefaultWrapTypeCreator<TCode, TMessage> : IWrapTypeCreator<TCode, TMessage>
 {
     #region Private 字段
+
+    /// <summary>
+    /// 创建包装类型的委托
+    /// </summary>
+    private readonly Func<Type, Type> _makeWrapTypeDelegate;
+
+    /// <summary>
+    /// 响应数据的泛型参数位置索引
+    /// </summary>
+    private readonly int _responseDataGenericTypeIndex = -1;
+
+    /// <summary>
+    /// 响应类型的泛型参数列表
+    /// </summary>
+    private readonly Type[] _responseTypeGenericArguments = Array.Empty<Type>();
 
     /// <summary>
     /// 类型是否应该包装检查委托
@@ -34,11 +51,22 @@ internal class DefaultWrapTypeCreator : IWrapTypeCreator
     public DefaultWrapTypeCreator(Type responseType, Type? responseGenericType)
     {
         ResponseType = responseType ?? throw new ArgumentNullException(nameof(responseType));
-        ResponseGenericType = responseGenericType;
+        ResponseGenericType = responseGenericType ??= (responseType.IsGenericType ? responseType.GetGenericTypeDefinition() : null);
 
-        _shouldWrapCheckDelegate = responseGenericType is null
-                                        ? ShouldWrapCheckWithOutGenericType
-                                        : ShouldWrapCheck;
+        if (responseGenericType is null)
+        {
+            _shouldWrapCheckDelegate = ShouldWrapCheckWithOutGenericType;
+            _makeWrapTypeDelegate = _ => ResponseType;
+        }
+        else
+        {
+            var genericTypeParameters = responseGenericType.GetTypeInfo().GenericTypeParameters.ToList();
+            _responseDataGenericTypeIndex = genericTypeParameters.FindIndex(m => m.GetCustomAttribute<ResponseDataAttribute>() is not null);
+            _responseTypeGenericArguments = responseType.GetGenericArguments();
+
+            _shouldWrapCheckDelegate = ShouldWrapCheck;
+            _makeWrapTypeDelegate = InternalMakeWrapType;
+        }
     }
 
     #endregion Public 构造函数
@@ -46,8 +74,7 @@ internal class DefaultWrapTypeCreator : IWrapTypeCreator
     #region Public 方法
 
     /// <inheritdoc/>
-    public Type MakeWrapType(Type type)
-        => ResponseGenericType is null ? ResponseType : ResponseGenericType.MakeGenericType(type);
+    public Type MakeWrapType(Type type) => _makeWrapTypeDelegate(type);
 
     /// <inheritdoc/>
     public bool ShouldWrap(Type type) => _shouldWrapCheckDelegate(type);
@@ -55,6 +82,13 @@ internal class DefaultWrapTypeCreator : IWrapTypeCreator
     #endregion Public 方法
 
     #region Private 方法
+
+    private Type InternalMakeWrapType(Type type)
+    {
+        var genericArguments = (Type[])_responseTypeGenericArguments.Clone();
+        genericArguments[_responseDataGenericTypeIndex] = type;
+        return ResponseGenericType!.MakeGenericType(genericArguments);
+    }
 
     /// <summary>
     /// 检查类型是否需要包装（包含泛型检查）
@@ -70,7 +104,7 @@ internal class DefaultWrapTypeCreator : IWrapTypeCreator
 
         //返回值本身就是响应类型或其子类
         shouldWrap = !(type.IsAssignableTo(ResponseType)
-                       || type.HasImplementedGeneric(ResponseGenericType!));
+                       || type.HasImplementedGenericSpecial(ResponseGenericType!, _responseTypeGenericArguments, _responseDataGenericTypeIndex));
 
         _typeWrapPolicyCache.TryAdd(type.TypeHandle.Value, shouldWrap);
 

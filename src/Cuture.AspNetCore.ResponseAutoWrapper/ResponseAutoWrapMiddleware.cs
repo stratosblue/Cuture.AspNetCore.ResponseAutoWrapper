@@ -140,7 +140,7 @@ internal class ResponseAutoWrapMiddleware
         finally
         {
             if (!context.Response.HasStarted
-                && context.Response.StatusCode != 200)
+                && context.Response.StatusCode != StatusCodes.Status200OK)
             {
                 var response = _notOKStatusCodeWrapDelegate(context);
                 if (response is not null)

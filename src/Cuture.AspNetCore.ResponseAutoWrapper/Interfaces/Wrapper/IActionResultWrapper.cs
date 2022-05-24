@@ -6,7 +6,9 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// <see cref="IAsyncResultFilter"/> 中用以包装 ActionResult 的包装器
 /// </summary>
 /// <typeparam name="TResponse">统一响应类型</typeparam>
-public interface IActionResultWrapper<TResponse> : IWrapper<TResponse> where TResponse : class
+/// <typeparam name="TCode">Code类型</typeparam>
+/// <typeparam name="TMessage">Message类型</typeparam>
+public interface IActionResultWrapper<TResponse, TCode, TMessage> : IWrapper<TResponse, TCode, TMessage> where TResponse : class
 {
     #region Public 方法
 

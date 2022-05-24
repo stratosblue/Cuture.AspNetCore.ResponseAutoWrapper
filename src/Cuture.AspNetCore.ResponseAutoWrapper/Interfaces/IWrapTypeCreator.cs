@@ -5,7 +5,7 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// <summary>
 /// 包装类型创建器<para/>
 /// </summary>
-public interface IWrapTypeCreator
+public interface IWrapTypeCreator<TCode, TMessage>
 {
     #region Public 属性
 

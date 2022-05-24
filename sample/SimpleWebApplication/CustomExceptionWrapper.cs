@@ -9,13 +9,12 @@ namespace SimpleWebApplication;
 
 // 自定义 Exception 包装器
 
-public class CustomExceptionWrapper : IExceptionWrapper<ApiResponse<object>>
+public class CustomExceptionWrapper : IExceptionWrapper<GenericApiResponse<int, string, object>, int, string>
 {
-    public ApiResponse<object>? Wrap(HttpContext context, Exception exception)
+    public GenericApiResponse<int, string, object>? Wrap(HttpContext context, Exception exception)
     {
-        return new ApiResponse<object>()
+        return new GenericApiResponse<int, string, object>(13579)
         {
-            Code = 13579,
             Message = exception.StackTrace,
         };
     }

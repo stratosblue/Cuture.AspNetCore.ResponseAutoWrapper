@@ -16,13 +16,12 @@ using ResponseAutoWrapper.TestHost;
 
 namespace ResponseAutoWrapper.Test;
 
-//Copy from GenericApiTest
 [TestClass]
-public class CRITest : TestServerBase
+public class LCRTest : TestServerBase
 {
     #region Public 属性
 
-    public virtual string UriPrefix { get; set; } = "/api/CRIWeatherForecast";
+    public virtual string UriPrefix { get; set; } = "/api/LCRWeatherForecast";
 
     #endregion Public 属性
 
@@ -41,13 +40,13 @@ public class CRITest : TestServerBase
     [DataRow("/get-valuetask?type=2")]
     public async Task Should_CustomDescription(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response, 10086);
 
-        Assert.AreEqual("Hello world!", response.Msg);
+        Assert.AreEqual("Hello world!", response.Info);
 
-        Debug.WriteLine(response.Msg);
+        Debug.WriteLine(response.Info);
     }
 
     [TestMethod]
@@ -74,23 +73,23 @@ public class CRITest : TestServerBase
     [DataRow("/get-with-param-required-limit?count=5")]
     public async Task Should_Wrapped200(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response);
-        CheckWeatherForecast(response.Result);
+        CheckWeatherForecast(response.Datas);
     }
 
     [TestMethod]
     [DataRow("/get-authorize")]
     public async Task Should_Wrapped200ThroughAuthorize(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response, 401);
 
-        Assert.IsNull(response.Result);
+        Assert.IsNull(response.Datas);
 
-        Debug.WriteLine($"No authentication Message: {response.Msg}");
+        Debug.WriteLine($"No authentication Message: {response.Info}");
 
         #region Cookie
 
@@ -98,43 +97,43 @@ public class CRITest : TestServerBase
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .UseCookie(cookie)
-                               .GetAsObjectAsync<CustomResponseI<WeatherForecast[]>>();
+                               .GetAsObjectAsync<LegacyCustomResponse<WeatherForecast[]>>();
 
         CheckResponseCode(response, 403);
 
-        Debug.WriteLine($"Cookie can not access Message: {response.Msg}");
+        Debug.WriteLine($"Cookie can not access Message: {response.Info}");
 
         cookie = await LoginAsync(true, true);
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .UseCookie(cookie)
-                               .GetAsObjectAsync<CustomResponseI<WeatherForecast[]>>();
+                               .GetAsObjectAsync<LegacyCustomResponse<WeatherForecast[]>>();
 
         CheckResponseCode(response);
-        CheckWeatherForecast(response.Result);
+        CheckWeatherForecast(response.Datas);
 
         #endregion Cookie
 
         #region Jwt
 
-        var token = await LoginAsync(false, false, "result");
+        var token = await LoginAsync(false, false, "datas");
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .UseBearerToken(token)
-                               .GetAsObjectAsync<CustomResponseI<WeatherForecast[]>>();
+                               .GetAsObjectAsync<LegacyCustomResponse<WeatherForecast[]>>();
 
         CheckResponseCode(response, 403);
 
-        Debug.WriteLine($"Jwt can not access Message: {response.Msg}");
+        Debug.WriteLine($"Jwt can not access Message: {response.Info}");
 
-        token = await LoginAsync(true, false, "result");
+        token = await LoginAsync(true, false, "datas");
 
         response = await Client.CreateRequest(CombineUri(requestPath))
                                .AddHeader("Authorization", $"Bearer {token}")
-                               .GetAsObjectAsync<CustomResponseI<WeatherForecast[]>>();
+                               .GetAsObjectAsync<LegacyCustomResponse<WeatherForecast[]>>();
 
         CheckResponseCode(response);
-        CheckWeatherForecast(response.Result);
+        CheckWeatherForecast(response.Datas);
 
         #endregion Jwt
     }
@@ -145,11 +144,11 @@ public class CRITest : TestServerBase
     [DataRow("/get-with-param-required-limit?count=11")]
     public async Task Should_Wrapped400(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response, 400);
 
-        Debug.WriteLine(response.Msg);
+        Debug.WriteLine(response.Info);
     }
 
     [TestMethod]
@@ -157,24 +156,24 @@ public class CRITest : TestServerBase
     [DataRow("/get-authorize")]
     public async Task Should_Wrapped401(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response, 401);
 
-        Assert.IsNull(response.Result);
+        Assert.IsNull(response.Datas);
 
-        Debug.WriteLine(response.Msg);
+        Debug.WriteLine(response.Info);
     }
 
     [TestMethod]
     [DataRow("/get-exception-throw")]
     public async Task Should_Wrapped500(string requestPath)
     {
-        var response = await Client.GetFromJsonAsync<CustomResponseI<WeatherForecast[]>>(CombineUri(requestPath));
+        var response = await Client.GetFromJsonAsync<LegacyCustomResponse<WeatherForecast[]>>(CombineUri(requestPath));
 
         CheckResponseCode(response, 500);
 
-        Debug.WriteLine(response.Msg);
+        Debug.WriteLine(response.Info);
     }
 
     [TestMethod]
@@ -190,18 +189,23 @@ public class CRITest : TestServerBase
 
     #region Protected 方法
 
-    protected static void CheckResponseCode([NotNull] CustomResponseI<WeatherForecast[]>? apiResponse, int code = StatusCodes.Status200OK)
+    protected static void CheckResponseCode([NotNull] LegacyCustomResponse<WeatherForecast[]>? apiResponse, int code = StatusCodes.Status200OK)
     {
         Assert.IsNotNull(apiResponse);
-        Assert.AreEqual(code, apiResponse.ResultCode);
+        Assert.AreEqual(code, apiResponse.StatusCode);
     }
 
+    [DebuggerStepThrough]
     protected string CombineUri(string path) => $"{UriPrefix}{path}";
 
     protected override async Task<IHostBuilder> CreateServerHostBuilderAsync()
     {
         var builder = await CreateServerHost();
-        builder.ConfigureServices(services => services.AddResponseAutoWrapper<CustomResponseI<object>>(GetOptionsSetupAction()));
+        builder.ConfigureServices(services =>
+        {
+            services.AddResponseAutoWrapper<LegacyCustomResponse<object>, int, string>(GetOptionsSetupAction())
+                    .ConfigureWrappers(builder => builder.AddLegacyWrappers<LegacyCustomResponseWrapper>());
+        });
         return builder;
     }
 
@@ -214,7 +218,7 @@ public class CRITest : TestServerBase
 }
 
 [TestClass]
-public class CRITest_DisableOpenAPISupport : CRITest
+public class LCRTest_DisableOpenAPISupport : LCRTest
 {
     #region Protected 方法
 
@@ -227,17 +231,17 @@ public class CRITest_DisableOpenAPISupport : CRITest
 }
 
 [TestClass]
-public class CRITest_NotGeneric : CRITest
+public class LCRTest_NotGeneric : LCRTest
 {
     #region Public 属性
 
-    public override string UriPrefix { get; set; } = "/api/NGCRIWeatherForecast";
+    public override string UriPrefix { get; set; } = "/api/NGLCRWeatherForecast";
 
     #endregion Public 属性
 
     #region Protected 方法
 
-    protected override Task<IHostBuilder> CreateServerHostBuilderAsync() => CreateServerHostWithStartup<NotGenericCRIStartup>();
+    protected override Task<IHostBuilder> CreateServerHostBuilderAsync() => CreateServerHostWithStartup<NotGenericLCRStartup>();
 
     #endregion Protected 方法
 }

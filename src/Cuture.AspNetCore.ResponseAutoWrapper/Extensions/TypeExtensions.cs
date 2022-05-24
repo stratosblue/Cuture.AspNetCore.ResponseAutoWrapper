@@ -115,6 +115,61 @@ internal static class TypeExtensions
         return false;
     }
 
+    /// <summary>
+    /// 判断类型 <paramref name="originType"/> 是否是指定泛型类型 <paramref name="genericType"/> 的子类型
+    /// </summary>
+    /// <param name="originType"></param>
+    /// <param name="genericType">typeof(GenericTypeName&lt;&gt;)</param>
+    /// <param name="genericArguments"></param>
+    /// <param name="dataArgumentIndex"></param>
+    /// <returns>是否是泛型接口的子类型</returns>
+    public static bool HasImplementedGenericSpecial(this Type originType, Type genericType, Type[] genericArguments, int dataArgumentIndex)
+    {
+        //TODO Add test for this
+        //继承检查的特化处理逻辑
+
+        while (originType != null && originType != typeof(object))
+        {
+            if (originType.IsGenericType
+                && originType.GetGenericTypeDefinition() is Type originGenericTypeDefinition
+                && originGenericTypeDefinition == genericType)
+            {
+                var originGenericArguments = originType.GetGenericArguments();
+                if (originGenericArguments.Length == genericArguments.Length)
+                {
+                    if (genericArguments.Length == 1)
+                    {
+                        return true;
+                    }
+                    bool isMatch = true;
+                    for (int i = 0; i < genericArguments.Length; i++)
+                    {
+                        if (i == dataArgumentIndex)
+                        {
+                            continue;
+                        }
+                        if (originGenericArguments[i] != genericArguments[i])
+                        {
+                            isMatch = false;
+                            break;
+                        }
+                    }
+                    if (isMatch)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (originType == genericType)
+            {
+                return true;
+            }
+            originType = originType.BaseType!;
+        }
+
+        return false;
+    }
+
 #if NETCOREAPP3_1
 
     public static bool IsAssignableTo(this Type type, Type targetType) => targetType.IsAssignableFrom(type);

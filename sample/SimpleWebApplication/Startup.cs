@@ -40,7 +40,7 @@ public class Startup
             //options.DisableOpenAPISupport     //禁用OpenAPI支持，Swagger将不会显示包装后的格式，也会解除响应类型必须为object泛型的限制
             //options.HandleAuthorizationResult     //处理授权结果（可能无效，需要自行测试）
             //options.HandleInvalidModelState       //处理无效模型状态
-            //options.UseWrapper<CustomExceptionWrapper>();     //使用自定义的包装器;
+            //options.RewriteStatusCode = null;     //包装时不覆写非200的HTTP状态码
         });
     }
 
@@ -53,6 +53,7 @@ public class Startup
             //配置
             //options.CatchExceptions 是否捕获异常
             //options.ThrowCaughtExceptions 捕获到异常处理结束后，是否再将异常抛出
+            //options.DefaultOutputFormatterSelector 默认输出格式化器选择委托，选择在请求中无 Accept 时，用于格式化响应的 IOutputFormatter
         });
 
         if (env.IsDevelopment())

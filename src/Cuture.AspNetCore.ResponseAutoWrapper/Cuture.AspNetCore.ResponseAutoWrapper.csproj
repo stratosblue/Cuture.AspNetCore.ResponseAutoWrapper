@@ -9,7 +9,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <VersionPrefix>1.0.0</VersionPrefix>
-    <VersionSuffix>alpha-0006</VersionSuffix>
+    <VersionSuffix>alpha-0101</VersionSuffix>
     <Description>用于`asp.net core`的响应和异常自动包装器，使`Action`提供一致的响应内容格式</Description>
 
     <PackageIdPrefix>Cuture.AspNetCore.ResponseAutoWrapper</PackageIdPrefix>

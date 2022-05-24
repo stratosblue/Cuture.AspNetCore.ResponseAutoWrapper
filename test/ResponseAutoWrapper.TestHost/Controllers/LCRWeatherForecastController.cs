@@ -5,27 +5,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ResponseAutoWrapper.TestHost.Controllers;
 
-//CustomResponseByResponseCreator
-//Copy from CRIWeatherForecastController
-
 [ApiController]
 [Route("api/[controller]")]
-public class CRCWeatherForecastController : GenericWeatherForecastController
+public class LCRWeatherForecastController : GenericWeatherForecastController
 {
     #region Public 方法
 
     [HttpGet]
     [Route("get-direct-api-response")]
-    public CustomResponse<WeatherForecast[]> GetDirectApiResponse()
+    public LegacyCustomResponse<WeatherForecast[]> GetDirectApiResponse()
     {
-        return new CustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
+        return new LegacyCustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
     }
 
     [HttpGet]
     [Route("get-direct-inherited-api-response")]
-    public InheritedCustomResponse GetDirectInheritedApiResponse()
+    public InheritedLegacyCustomResponse GetDirectInheritedApiResponse()
     {
-        return new InheritedCustomResponse()
+        return new InheritedLegacyCustomResponse()
         {
             Datas = WeatherForecast.GenerateData()
         };
@@ -43,26 +40,26 @@ public class CRCWeatherForecastController : GenericWeatherForecastController
         return type switch
         {
             0 => WeatherForecast.GenerateData(),
-            1 => new CustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() },
-            2 => new InheritedCustomResponse() { Datas = WeatherForecast.GenerateData() },
+            1 => new LegacyCustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() },
+            2 => new InheritedLegacyCustomResponse() { Datas = WeatherForecast.GenerateData() },
             _ => WeatherForecast.GenerateData(),
         };
     }
 
     [HttpGet]
     [Route("get-task-direct-api-response")]
-    public async Task<CustomResponse<WeatherForecast[]>> GetTaskDirectApiResponseAsync()
+    public async Task<LegacyCustomResponse<WeatherForecast[]>> GetTaskDirectApiResponseAsync()
     {
         await Task.Delay(1);
-        return new CustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
+        return new LegacyCustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
     }
 
     [HttpGet]
     [Route("get-valuetask-direct-api-response")]
-    public async ValueTask<CustomResponse<WeatherForecast[]>> GetValueTaskDirectApiResponseAsync()
+    public async ValueTask<LegacyCustomResponse<WeatherForecast[]>> GetValueTaskDirectApiResponseAsync()
     {
         await Task.Delay(1);
-        return new CustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
+        return new LegacyCustomResponse<WeatherForecast[]>() { Datas = WeatherForecast.GenerateData() };
     }
 
     #endregion Public 方法

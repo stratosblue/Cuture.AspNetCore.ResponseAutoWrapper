@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 
@@ -184,7 +183,7 @@ public class GenericApiTest : TestServerBase
 
     #region Protected 方法
 
-    protected static void CheckResponseCode([NotNull] ApiResponse? apiResponse, int code = StatusCodes.Status200OK)
+    protected static void CheckResponseCode(ApiResponse<WeatherForecast[]>? apiResponse, int code = StatusCodes.Status200OK)
     {
         Assert.IsNotNull(apiResponse);
         Assert.AreEqual(code, apiResponse.Code);

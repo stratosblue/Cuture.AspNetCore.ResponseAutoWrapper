@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Mvc.Filters;
 
-internal class ResponseAutoWrapResultFilter<TResponse> : IAsyncAlwaysRunResultFilter
+internal class ResponseAutoWrapResultFilter<TResponse, TCode, TMessage> : IAsyncAlwaysRunResultFilter
     where TResponse : class
 {
     #region Private 字段
 
-    private readonly IActionResultWrapper<TResponse> _actionResultWrapper;
+    private readonly IActionResultWrapper<TResponse, TCode, TMessage> _actionResultWrapper;
 
     #endregion Private 字段
 
     #region Public 构造函数
 
-    /// <inheritdoc cref="ResponseAutoWrapResultFilter{TResponse}"/>
-    public ResponseAutoWrapResultFilter(IActionResultWrapper<TResponse> actionResultWrapper)
+    /// <inheritdoc cref="ResponseAutoWrapResultFilter{TResponse, TCode, TMessage}"/>
+    public ResponseAutoWrapResultFilter(IActionResultWrapper<TResponse, TCode, TMessage> actionResultWrapper)
     {
         _actionResultWrapper = actionResultWrapper ?? throw new ArgumentNullException(nameof(actionResultWrapper));
     }
