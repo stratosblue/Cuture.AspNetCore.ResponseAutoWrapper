@@ -12,22 +12,24 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cuture.Http" Version="2.*" />
     <PackageReference Include="IdentityModel" Version="5.*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="Cuture.Http" Version="2.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.*" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="3.*" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net5.0'">
+    <PackageReference Include="Cuture.Http" Version="2.1.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.*" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="5.*" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
+    <PackageReference Include="Cuture.Http" Version="2.*" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.*" />
     <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="6.*" />
   </ItemGroup>

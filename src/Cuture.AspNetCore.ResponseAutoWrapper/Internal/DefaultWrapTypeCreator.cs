@@ -119,11 +119,7 @@ internal class DefaultWrapTypeCreator<TCode, TMessage> : IWrapTypeCreator<TCode,
     private bool ShouldWrapCheckWithOutGenericType(Type type)
     {
         //返回值本身就是响应类型或其子类
-        if (type.IsAssignableTo(ResponseType))
-        {
-            return false;
-        }
-        return true;
+        return !type.IsAssignableTo(ResponseType);
     }
 
     #endregion Private 方法
