@@ -113,7 +113,7 @@ public abstract class GenericApiResponse<TCode, TMessage> : GenericApiResponse<T
 /// <typeparam name="TMessage"></typeparam>
 /// <typeparam name="TData"></typeparam>
 [Serializable]
-public class GenericApiResponse<TCode, TMessage, [ResponseData] TData> : GenericApiResponse<TCode, TMessage>
+public class GenericApiResponse<TCode, TMessage, TData> : GenericApiResponse<TCode, TMessage>
 {
     #region Public 属性
 

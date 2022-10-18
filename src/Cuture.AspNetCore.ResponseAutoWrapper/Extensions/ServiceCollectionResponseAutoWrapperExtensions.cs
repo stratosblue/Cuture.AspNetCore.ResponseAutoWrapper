@@ -188,11 +188,11 @@ public static class ServiceCollectionResponseAutoWrapperExtensions
 
         Type? responseGenericType = null;
 
-        //启用OpenAPI支持时，TResponse必须是一个包含object泛型参数的泛型实现类，且object对应的泛型参数需要标记 ResponseDataAttribute
+        //启用OpenAPI支持时，TResponse必须是一个泛型实现类，且最后一个泛型参数需要是object
         if (!disableOpenAPISupport
             && !CheckResponseTypeGenericParameter(responseType, out responseGenericType))
         {
-            throw new ArgumentException($"When enabled OpenAPI Support. Response type must be a generic type and has a generic type argument \"{typeof(object)}\" which has attribute \"{typeof(ResponseDataAttribute)}\".");
+            throw new ArgumentException($"When enabled OpenAPI Support. Response type must be a generic type and the last generic type argument must be \"{typeof(object)}\".");
         }
 
         services.TryAddSingleton<IWrapTypeCreator<TCode, TMessage>>(new DefaultWrapTypeCreator<TCode, TMessage>(responseType, responseGenericType));
@@ -221,17 +221,12 @@ public static class ServiceCollectionResponseAutoWrapperExtensions
                 return false;
             }
             responseGenericType = responseType.GetGenericTypeDefinition();
-            var genericTypeParameters = responseGenericType.GetTypeInfo().GenericTypeParameters.ToList();
-            var responseDataTypeIndex = genericTypeParameters.FindIndex(m => m.GetCustomAttribute<ResponseDataAttribute>() is not null);
-
-            if (responseDataTypeIndex == -1)
-            {
-                return false;
-            }
 
             var genericParameterTypes = responseType.GetGenericArguments();
 
-            return genericParameterTypes[responseDataTypeIndex] == typeof(object);
+            return genericParameterTypes is not null
+                   && genericParameterTypes.Length != 0
+                   && genericParameterTypes.Last() == typeof(object);
         }
     }
 

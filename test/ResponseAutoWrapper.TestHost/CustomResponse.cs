@@ -24,7 +24,7 @@ public class CustomResponse
     #endregion Public 属性
 }
 
-public class CustomResponse<[ResponseData] TData>
+public class CustomResponse<TData>
 {
     #region Public 属性
 

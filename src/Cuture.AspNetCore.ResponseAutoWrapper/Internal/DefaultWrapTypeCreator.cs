@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Reflection;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal;
@@ -60,8 +59,8 @@ internal class DefaultWrapTypeCreator<TCode, TMessage> : IWrapTypeCreator<TCode,
         }
         else
         {
-            var genericTypeParameters = responseGenericType.GetTypeInfo().GenericTypeParameters.ToList();
-            _responseDataGenericTypeIndex = genericTypeParameters.FindIndex(m => m.GetCustomAttribute<ResponseDataAttribute>() is not null);
+            var genericTypeParameters = responseGenericType.GetTypeInfo().GenericTypeParameters;
+            _responseDataGenericTypeIndex = genericTypeParameters.Length - 1;
             _responseTypeGenericArguments = responseType.GetGenericArguments();
 
             _shouldWrapCheckDelegate = ShouldWrapCheck;

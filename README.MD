@@ -128,7 +128,7 @@ app.UseResponseAutoWrapper(options =>
 
 #### 4.1.1 定义类型
 ```C#
-public class CommonResponse<[ResponseData] TData>
+public class CommonResponse<TData>
 {
     public string Code { get; set; }
 
@@ -137,7 +137,7 @@ public class CommonResponse<[ResponseData] TData>
     public TData Result { get; set; }
 }
 ```
- - `Data` 对应的泛型参数必须标记特性 `[ResponseData]`；
+ - `Data` 对应的泛型参数必须为最后一个泛型参数；
  - 当禁用 `OpenAPI支持` 时，响应类型可以不是泛型；
 
 #### 4.1.2 实现Wrapper

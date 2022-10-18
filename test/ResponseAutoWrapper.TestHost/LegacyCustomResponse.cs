@@ -11,7 +11,7 @@ public class LegacyCustomResponse
     public string Info { get; set; }
 }
 
-public class LegacyCustomResponse<[ResponseData]TData>
+public class LegacyCustomResponse<TData>
 {
     public int StatusCode { get; set; } = 200;
 

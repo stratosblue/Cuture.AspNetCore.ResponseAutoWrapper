@@ -1,10 +1,8 @@
 ﻿using System.Text.Json.Serialization;
 
-using Cuture.AspNetCore.ResponseAutoWrapper;
-
 namespace CustomStructureWebApplication;
 
-public class CommonResponse<[ResponseData]TData>
+public class CommonResponse<TData>
 {
     public string Code { get; set; }
 
