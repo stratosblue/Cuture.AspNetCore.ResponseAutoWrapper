@@ -20,11 +20,12 @@ public class ResponseAutoWrapMiddlewareOptions
 
     /// <summary>
     /// 默认输出格式化器选择委托<para/>
-    /// 选择在请求中无 Accept 时，用于格式化响应的 <see cref="IOutputFormatter"/>
+    /// 选择在请求中无 Accept 时，用于格式化响应的 <see cref="IOutputFormatter"/><para/>
+    /// 默认时会选择 <see cref="SystemTextJsonOutputFormatter"/> ，不存在则会抛出异常
     /// </summary>
     public Func<FormatterCollection<IOutputFormatter>, IOutputFormatter> DefaultOutputFormatterSelector { get; set; }
         = static formatters => formatters.FirstOrDefault(m => m.GetType() == typeof(SystemTextJsonOutputFormatter))
-                                                            ?? throw new InvalidOperationException($"Can not found {nameof(SystemTextJsonOutputFormatter)} by default. Must select a formatter manually.");
+                                                            ?? throw new InvalidOperationException($"Can not found {nameof(SystemTextJsonOutputFormatter)} by default. Must select a formatter manually by \"{nameof(ResponseAutoWrapMiddlewareOptions)}.{nameof(DefaultOutputFormatterSelector)}\" at middleware setup.");
 
     /// <summary>
     /// 是否将捕获到的异常抛出给上层中间件<para/>

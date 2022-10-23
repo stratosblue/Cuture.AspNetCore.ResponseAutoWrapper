@@ -84,38 +84,55 @@ public static class IResponseAutoWrapperBuilderExtensions
         }
 
         /// <summary>
-        /// 添加一个 Wrapper
+        /// 检查 <typeparamref name="TWrapper"/> 实现的包装接口，将其添加为对应的包装器
         /// </summary>
         /// <typeparam name="TWrapper"></typeparam>
         /// <param name="lifetime">注册DI容器的生命周期</param>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public WrapperBuilder<TResponse, TCode, TMessage> AddWrapper<TWrapper>(ServiceLifetime lifetime = ServiceLifetime.Singleton) where TWrapper : IWrapper<TResponse, TCode, TMessage>
+        public WrapperBuilder<TResponse, TCode, TMessage> AddWrapper<TWrapper>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+            where TWrapper : IWrapper<TResponse, TCode, TMessage>
         {
-            var wrapperType = typeof(TWrapper);
-            Type serviceType;
-            if (wrapperType.IsAssignableTo(typeof(IActionResultWrapper<TResponse, TCode, TMessage>)))
+            bool hasAdded = false;
+            if (TryAddWrapper<TWrapper, IActionResultWrapper<TResponse, TCode, TMessage>>(lifetime))
             {
-                serviceType = typeof(IActionResultWrapper<TResponse, TCode, TMessage>);
+                hasAdded = true;
             }
-            else if (wrapperType.IsAssignableTo(typeof(IExceptionWrapper<TResponse, TCode, TMessage>)))
+            if (TryAddWrapper<TWrapper, IExceptionWrapper<TResponse, TCode, TMessage>>(lifetime))
             {
-                serviceType = typeof(IExceptionWrapper<TResponse, TCode, TMessage>);
+                hasAdded = true;
             }
-            else if (wrapperType.IsAssignableTo(typeof(IInvalidModelStateWrapper<TResponse, TCode, TMessage>)))
+            if (TryAddWrapper<TWrapper, IInvalidModelStateWrapper<TResponse, TCode, TMessage>>(lifetime))
             {
-                serviceType = typeof(IInvalidModelStateWrapper<TResponse, TCode, TMessage>);
+                hasAdded = true;
             }
-            else if (wrapperType.IsAssignableTo(typeof(INotOKStatusCodeWrapper<TResponse, TCode, TMessage>)))
+            if (TryAddWrapper<TWrapper, INotOKStatusCodeWrapper<TResponse, TCode, TMessage>>(lifetime))
             {
-                serviceType = typeof(INotOKStatusCodeWrapper<TResponse, TCode, TMessage>);
+                hasAdded = true;
             }
-            else
+            if (!hasAdded)
             {
-                throw new ArgumentException($"{wrapperType} not implemented any available wrapper interface for response type {typeof(TResponse)}.");
+                throw new ArgumentException($"{typeof(TWrapper)} not implemented any available wrapper interface for response type {typeof(TResponse)}.");
             }
+            return this;
+        }
 
-            _services.TryAddEnumerable(ServiceDescriptor.Describe(serviceType, wrapperType, lifetime));
+        /// <summary>
+        /// 将 <typeparamref name="TWrapper"/> 添加为 <typeparamref name="TWrapperInterface"/> 包装器
+        /// </summary>
+        /// <typeparam name="TWrapper"></typeparam>
+        /// <typeparam name="TWrapperInterface"></typeparam>
+        /// <param name="lifetime">注册DI容器的生命周期</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public WrapperBuilder<TResponse, TCode, TMessage> AddWrapper<TWrapper, TWrapperInterface>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+            where TWrapper : IWrapper<TResponse, TCode, TMessage>, TWrapperInterface
+            where TWrapperInterface : IWrapper<TResponse, TCode, TMessage>
+        {
+            if (!TryAddWrapper<TWrapper, TWrapperInterface>(lifetime))
+            {
+                throw new ArgumentException($"{typeof(TWrapper)} not implemented wrapper interface {typeof(TWrapperInterface)} for response type {typeof(TResponse)}.");
+            }
 
             return this;
         }
@@ -124,11 +141,35 @@ public static class IResponseAutoWrapperBuilderExtensions
         /// 尝试将派生自 <see cref="AbstractResponseWrapper{TResponse, TCode, TMessage}"/> 的类添加为多个 Wrapper
         /// </summary>
         /// <typeparam name="TWrapper"></typeparam>
+        /// <param name="lifetime">注册DI容器的生命周期</param>
         /// <returns></returns>
-        public WrapperBuilder<TResponse, TCode, TMessage> AddWrappers<TWrapper>() where TWrapper : AbstractResponseWrapper<TResponse, TCode, TMessage>
+        public WrapperBuilder<TResponse, TCode, TMessage> AddWrappers<TWrapper>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+            where TWrapper : AbstractResponseWrapper<TResponse, TCode, TMessage>
         {
-            _services.TryAddWrapper<TWrapper, TResponse, TCode, TMessage>();
+            _services.TryAddWrapper<TWrapper, TResponse, TCode, TMessage>(lifetime);
             return this;
+        }
+
+        /// <summary>
+        /// 尝试将 <typeparamref name="TWrapper"/> 添加为 <typeparamref name="TWrapperInterface"/> 包装器
+        /// </summary>
+        /// <typeparam name="TWrapper"></typeparam>
+        /// <typeparam name="TWrapperInterface"></typeparam>
+        /// <param name="lifetime">注册DI容器的生命周期</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public bool TryAddWrapper<TWrapper, TWrapperInterface>(ServiceLifetime lifetime = ServiceLifetime.Singleton)
+            where TWrapper : IWrapper<TResponse, TCode, TMessage>
+            where TWrapperInterface : IWrapper<TResponse, TCode, TMessage>
+        {
+            var wrapperType = typeof(TWrapper);
+            if (wrapperType.IsAssignableTo(typeof(IActionResultWrapper<TResponse, TCode, TMessage>)))
+            {
+                _services.TryAddEnumerable(ServiceDescriptor.Describe(typeof(TWrapperInterface), wrapperType, lifetime));
+                return true;
+            }
+
+            return false;
         }
 
         #endregion Public 方法

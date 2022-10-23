@@ -147,17 +147,17 @@ public static class ServiceCollectionResponseAutoWrapperExtensions
 
     #region Internal 方法
 
-    internal static void TryAddWrapper<TResponseWrapper, TResponse, TCode, TMessage>(this IServiceCollection services)
+    internal static void TryAddWrapper<TResponseWrapper, TResponse, TCode, TMessage>(this IServiceCollection services, ServiceLifetime lifetime = ServiceLifetime.Singleton)
         where TResponseWrapper : AbstractResponseWrapper<TResponse, TCode, TMessage>
         where TResponse : class
     {
         static TResponseWrapper GetDefaultResponseWrapper(IServiceProvider serviceProvider) => serviceProvider.GetRequiredService<TResponseWrapper>();
 
-        services.TryAddSingleton<TResponseWrapper>();
-        services.TryAddSingleton<IActionResultWrapper<TResponse, TCode, TMessage>>(GetDefaultResponseWrapper);
-        services.TryAddSingleton<IExceptionWrapper<TResponse, TCode, TMessage>>(GetDefaultResponseWrapper);
-        services.TryAddSingleton<INotOKStatusCodeWrapper<TResponse, TCode, TMessage>>(GetDefaultResponseWrapper);
-        services.TryAddSingleton<IInvalidModelStateWrapper<TResponse, TCode, TMessage>>(GetDefaultResponseWrapper);
+        services.TryAdd(ServiceDescriptor.Describe(typeof(TResponseWrapper), typeof(TResponseWrapper), lifetime));
+        services.TryAdd(ServiceDescriptor.Describe(typeof(IActionResultWrapper<TResponse, TCode, TMessage>), GetDefaultResponseWrapper, lifetime));
+        services.TryAdd(ServiceDescriptor.Describe(typeof(IExceptionWrapper<TResponse, TCode, TMessage>), GetDefaultResponseWrapper, lifetime));
+        services.TryAdd(ServiceDescriptor.Describe(typeof(INotOKStatusCodeWrapper<TResponse, TCode, TMessage>), GetDefaultResponseWrapper, lifetime));
+        services.TryAdd(ServiceDescriptor.Describe(typeof(IInvalidModelStateWrapper<TResponse, TCode, TMessage>), GetDefaultResponseWrapper, lifetime));
     }
 
     #endregion Internal 方法
