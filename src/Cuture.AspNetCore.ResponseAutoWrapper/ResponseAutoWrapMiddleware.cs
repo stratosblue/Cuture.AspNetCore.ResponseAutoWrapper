@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper;
@@ -172,11 +174,61 @@ internal class ResponseAutoWrapMiddleware
 
     private Task WriteResponseWithFormatterAsync(HttpContext context, object response)
     {
-        var formatterContext = new OutputFormatterWriteContext(context,
-                                                               _httpResponseStreamWriterFactory.CreateWriter,
-                                                               response.GetType(),
-                                                               response);
+        var formatterWriteContext = new OutputFormatterWriteContext(context,
+                                                                    _httpResponseStreamWriterFactory.CreateWriter,
+                                                                    response.GetType(),
+                                                                    response);
 
+        if (context.Request.Headers.TryGetValue(HeaderNames.Accept, out var acceptValues)
+            && acceptValues.Count > 0
+            && !EmptyOrHasWildcard(acceptValues))
+        {
+            return WriteResponseWithSelectFormatterAsync(context, formatterWriteContext);
+        }
+
+        // 有通配符，直接使用默认Formatter
+        return _defaultOutputFormatter.WriteAsync(formatterWriteContext);
+
+        static bool EmptyOrHasWildcard(in StringValues acceptValues)
+        {
+            // 检查通配符
+            return acceptValues.Count switch
+            {
+                1 => NullOrHasWildcard(acceptValues, 0),
+                2 => NullOrHasWildcard(acceptValues, 0) && NullOrHasWildcard(acceptValues, 1),
+                { } count => HasAnyWildcard(acceptValues, count),
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool HasAnyWildcard(in StringValues acceptValues, int count)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (NullOrHasWildcard(acceptValues, i))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        static bool NullOrHasWildcard(in StringValues acceptValues, in int index)
+        {
+            var value = acceptValues[index];
+            return value is null || value.Contains("*/*", StringComparison.Ordinal);
+        }
+    }
+
+    /// <summary>
+    /// 选择Formatter进行响应
+    /// </summary>
+    /// <param name="context"></param>
+    /// <param name="formatterWriteContext"></param>
+    /// <returns></returns>
+    private Task WriteResponseWithSelectFormatterAsync(HttpContext context, OutputFormatterWriteContext formatterWriteContext)
+    {
         var accepts = context.Request.Headers.TryGetValue(HeaderNames.Accept, out var acceptValue)
                       ? MediaTypeHeaderValue.TryParseList(acceptValue, out var parsedAcceptValues)
                         ? CreateMediaTypeCollection(parsedAcceptValues)
@@ -185,12 +237,12 @@ internal class ResponseAutoWrapMiddleware
 
         var selectedFormatter = accepts is null
                                 ? _defaultOutputFormatter
-                                : _outputFormatterSelector.SelectFormatter(formatterContext,
-                                                                         Array.Empty<IOutputFormatter>(),
-                                                                         accepts)
-                                    ?? _defaultOutputFormatter;
+                                : _outputFormatterSelector.SelectFormatter(formatterWriteContext,
+                                                                           Array.Empty<IOutputFormatter>(),
+                                                                           accepts)
+                                  ?? _defaultOutputFormatter;
 
-        return selectedFormatter.WriteAsync(formatterContext);
+        return selectedFormatter.WriteAsync(formatterWriteContext);
     }
 
     #endregion Internal

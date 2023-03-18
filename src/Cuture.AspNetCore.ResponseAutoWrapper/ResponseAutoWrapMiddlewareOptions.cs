@@ -14,7 +14,7 @@ public class ResponseAutoWrapMiddlewareOptions
 
     /// <summary>
     /// 是否捕获异常<para/>
-    /// default is "true"
+    /// default is <see langword="true"/>
     /// </summary>
     public bool CatchExceptions { get; set; } = true;
 
@@ -29,7 +29,7 @@ public class ResponseAutoWrapMiddlewareOptions
 
     /// <summary>
     /// 是否将捕获到的异常抛出给上层中间件<para/>
-    /// default is "fasle"
+    /// default is <see langword="false"/>
     /// </summary>
     public bool ThrowCaughtExceptions { get; set; } = false;
 

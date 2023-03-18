@@ -8,7 +8,7 @@
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Description>用于`asp.net core`的响应和异常自动包装器，使`Action`提供一致的响应内容格式</Description>
 
     <PackageIdPrefix>Cuture.AspNetCore.ResponseAutoWrapper</PackageIdPrefix>
@@ -19,7 +19,7 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>$(PackageProjectUrl)</RepositoryUrl>
 
-    <PackageTags>response-wrapper autowrap autowrapper auto-wrapper response-auto-wrapper asp-net-core</PackageTags>
+    <PackageTags>response-wrapper responsewrapper response-wrap responsewrap autowrap auto-wrapper autowrapper response-auto-wrapper responseautowrapper asp-net-core</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
