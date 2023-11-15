@@ -4,11 +4,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-#if NET5_0_OR_GREATER
-
 using Microsoft.AspNetCore.Authorization;
-
-#endif
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper;
 
@@ -39,8 +35,6 @@ public class ResponseAutoWrapperOptions
     /// <value>default value is 'false'</value>
     public bool DisableOpenAPISupport { get; set; } = false;
 
-#if NET5_0_OR_GREATER
-
     /// <summary>
     /// 处理授权失败响应<para/>
     /// 注册 <see cref="AutoWrapperAuthorizationMiddlewareResultHandler"/> 为 <see cref="IAuthorizationMiddlewareResultHandler"/><para/>
@@ -48,8 +42,6 @@ public class ResponseAutoWrapperOptions
     /// </summary>
     /// <value>default value is 'false'</value>
     public bool HandleAuthorizationResult { get; set; } = false;
-
-#endif
 
     /// <summary>
     /// 处理无效模型绑定状态<para/>

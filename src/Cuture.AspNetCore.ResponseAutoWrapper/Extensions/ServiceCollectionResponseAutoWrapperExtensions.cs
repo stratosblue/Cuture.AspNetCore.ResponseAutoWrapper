@@ -11,9 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 
-#if NET5_0_OR_GREATER
 using Microsoft.AspNetCore.Authorization;
-#endif
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -95,15 +93,8 @@ public static class ServiceCollectionResponseAutoWrapperExtensions
     public static IResponseAutoWrapperBuilder<TResponse, TCode, TMessage> AddResponseAutoWrapper<TResponse, TCode, TMessage>(this IServiceCollection services, ResponseAutoWrapperOptions options)
         where TResponse : class
     {
-        if (services is null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
-
-        if (options is null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
+        ArgumentNullException.ThrowIfNull(services);
+        ArgumentNullException.ThrowIfNull(options);
 
         services.AddControllers();
 
@@ -119,12 +110,10 @@ public static class ServiceCollectionResponseAutoWrapperExtensions
             options.Filters.AddService<ResponseAutoWrapResultFilter<TResponse, TCode, TMessage>>(Constants.DefaultFilterOrder);
         });
 
-#if NET5_0_OR_GREATER
         if (options.HandleAuthorizationResult)
         {
             services.TryAddEnumerable(ServiceDescriptor.Singleton<IAuthorizationMiddlewareResultHandler, AutoWrapperAuthorizationMiddlewareResultHandler>());
         }
-#endif
 
         if (options.HandleInvalidModelState)
         {

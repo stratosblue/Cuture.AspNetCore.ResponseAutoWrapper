@@ -82,7 +82,7 @@ public abstract class BaseStartup
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("123456789123456789")),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("123456789123456789_123456789123456789")),
                         ValidIssuer = "Issuer",
                         ValidAudience = "Audience",
                         ValidateIssuer = false,

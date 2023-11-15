@@ -1,5 +1,4 @@
-﻿#if NET5_0_OR_GREATER
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Authorization.Policy;
 using Microsoft.AspNetCore.Http;
@@ -33,4 +32,3 @@ internal class AutoWrapperAuthorizationMiddlewareResultHandler : IAuthorizationM
 
     #endregion Public 方法
 }
-#endif
