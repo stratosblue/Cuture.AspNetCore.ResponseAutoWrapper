@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-
 using Cuture.AspNetCore.ResponseAutoWrapper;
 using Cuture.AspNetCore.ResponseAutoWrapper.Internal;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
-
-using Microsoft.AspNetCore.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
