@@ -39,7 +39,6 @@
 ### 可能与其它第三方组件存在的冲突点
 - `ResultFilter`中会频繁`未加锁`读取`ActionDescriptor.Properties`，如果存在不正确的写入，可能引发一些问题；
 - 使用动态添加`ProducesResponseTypeAttribute`的方式实现的`OpenAPI`支持，可能存在不完善的地方；
-- `asp.net core3.1`不支持`IAuthorizationMiddlewareResultHandler`，不支持选项`HandleAuthorizationResult`；
 - `授权`和`认证`失败的包装需要手动指定对应组件的失败处理方法，否则可能无法包装；
 - 参数验证失败的包装通过设置`ApiBehaviorOptions.InvalidModelStateResponseFactory`实现，可能有处理逻辑冲突；
 
@@ -48,7 +47,7 @@
 ### 3.1 安装`Nuget`包
 
 ```PowerShell
-Install-Package Cuture.AspNetCore.ResponseAutoWrapper -IncludePrerelease
+Install-Package Cuture.AspNetCore.ResponseAutoWrapper
 ```
 
 ### 3.2 启用`ResultFilter`包装器

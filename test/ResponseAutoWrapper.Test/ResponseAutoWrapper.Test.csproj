@@ -4,10 +4,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="System.Net.Http.Json" Version="5.*" />
-  </ItemGroup>
-  
   <ItemGroup>
     <ProjectReference Include="..\ResponseAutoWrapper.TestHost\ResponseAutoWrapper.TestHost.csproj" />
   </ItemGroup>

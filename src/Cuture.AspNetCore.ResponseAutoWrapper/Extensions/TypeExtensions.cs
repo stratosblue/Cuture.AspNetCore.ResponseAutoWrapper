@@ -170,12 +170,6 @@ internal static class TypeExtensions
         return false;
     }
 
-#if NETCOREAPP3_1
-
-    public static bool IsAssignableTo(this Type type, Type targetType) => targetType.IsAssignableFrom(type);
-
-#endif
-
     /// <summary>
     /// 判断 <paramref name="type"/> 是否是泛型 <paramref name="generic"/> 本身，或其直接实现
     /// </summary>
