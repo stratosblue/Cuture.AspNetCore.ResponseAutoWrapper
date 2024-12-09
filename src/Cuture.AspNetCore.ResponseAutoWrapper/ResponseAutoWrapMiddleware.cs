@@ -25,8 +25,11 @@ internal class ResponseAutoWrapMiddleware
     private readonly Func<HttpContext, Exception, object?> _exceptionWrapDelegate;
 
     private readonly ILogger _logger;
+
     private readonly RequestDelegate _next;
+
     private readonly bool _notCatchExceptions;
+
     private readonly Func<HttpContext, object?> _notOKStatusCodeWrapDelegate;
 
     /// <inheritdoc cref="ResponseAutoWrapMiddlewareOptions.ThrowCaughtExceptions"/>
@@ -35,7 +38,9 @@ internal class ResponseAutoWrapMiddleware
     #region OutputFormat
 
     private readonly IOutputFormatter _defaultOutputFormatter;
+
     private readonly IHttpResponseStreamWriterFactory _httpResponseStreamWriterFactory;
+
     private readonly OutputFormatterSelector _outputFormatterSelector;
 
     #endregion OutputFormat
@@ -125,13 +130,18 @@ internal class ResponseAutoWrapMiddleware
             }
 
             //响应未开始，则包装响应
-            if (!context.Response.HasStarted)
+            if (!context.Response.HasStarted
+                && !context.RequestAborted.IsCancellationRequested)
             {
                 var response = _exceptionWrapDelegate(context, ex);
                 if (response is not null)
                 {
                     await WriteResponseWithFormatterAsync(context, response);
                 }
+            }
+            else //无法对响应进行包装，此时强制向上层抛出异常
+            {
+                throw;
             }
 
             if (_throwCaughtExceptions)
@@ -142,6 +152,7 @@ internal class ResponseAutoWrapMiddleware
         finally
         {
             if (!context.Response.HasStarted
+                && !context.RequestAborted.IsCancellationRequested
                 && context.Response.StatusCode != StatusCodes.Status200OK)
             {
                 var response = _notOKStatusCodeWrapDelegate(context);

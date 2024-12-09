@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -172,6 +172,8 @@ public abstract class AbstractResponseWrapper<TResponse, TCode, TMessage>
         {
             return null;
         }
+
+        Activity.Current.RecordException(exception: exception, tags: default, timestamp: DateTimeOffset.UtcNow);
 
         return AfterWrap(context, ExceptionWrap(context, exception));
     }
