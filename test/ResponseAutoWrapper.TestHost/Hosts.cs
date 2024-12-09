@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Hosting;
 
@@ -7,6 +6,8 @@ namespace ResponseAutoWrapper.TestHost;
 
 public static class Hosts
 {
+    #region Public 方法
+
     public static IHostBuilder CreateHostBuilder(bool useTestServer, params string[] args)
     {
         return Host.CreateDefaultBuilder(args)
@@ -34,4 +35,6 @@ public static class Hosts
                        webBuilder.UseStartup<TStartup>();
                    });
     }
+
+    #endregion Public 方法
 }

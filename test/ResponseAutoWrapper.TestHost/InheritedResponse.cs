@@ -2,15 +2,19 @@
 
 namespace ResponseAutoWrapper.TestHost;
 
+public class InheritedCustomResponse : CustomResponse<WeatherForecast[]>
+{
+}
+
 public class InheritedResponse : GenericApiResponse<ResponseCode, ResponseMessage, WeatherForecast[]>
 {
+    #region Public 构造函数
+
     public InheritedResponse() : base(ResponseCode.Success)
     {
     }
-}
 
-public class InheritedCustomResponse : CustomResponse<WeatherForecast[]>
-{
+    #endregion Public 构造函数
 }
 
 public class InheritedCustomResponseNotGeneric : CustomResponse

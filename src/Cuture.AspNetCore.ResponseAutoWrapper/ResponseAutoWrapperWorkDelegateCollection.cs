@@ -23,6 +23,8 @@ public class ResponseAutoWrapperWorkDelegateCollection
 
     #endregion Public 属性
 
+    #region Public 构造函数
+
     /// <summary>
     /// <inheritdoc cref="ResponseAutoWrapperWorkDelegateCollection"/>
     /// </summary>
@@ -34,4 +36,6 @@ public class ResponseAutoWrapperWorkDelegateCollection
         ExceptionWrapDelegate = exceptionWrapDelegate ?? throw new ArgumentNullException(nameof(exceptionWrapDelegate));
         NotOKStatusCodeWrapDelegate = notOKStatusCodeWrapDelegate ?? throw new ArgumentNullException(nameof(notOKStatusCodeWrapDelegate));
     }
+
+    #endregion Public 构造函数
 }

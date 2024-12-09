@@ -12,8 +12,8 @@ dotnet_style_qualification_for_property = false:silent
 dotnet_style_qualification_for_method = false:silent
 dotnet_style_qualification_for_event = false:silent
 dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
-indent_size = 4
-tab_width = 4
+indent_size = 2
+tab_width = 2
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 
 # c# 文件
@@ -241,15 +241,15 @@ dotnet_naming_rule.方法_should_be_pascal_case.style = pascal_case
 
 dotnet_naming_symbols.接口.applicable_kinds = interface
 dotnet_naming_symbols.接口.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.接口.required_modifiers = 
+dotnet_naming_symbols.接口.required_modifiers =
 
 dotnet_naming_symbols.方法.applicable_kinds = method
 dotnet_naming_symbols.方法.applicable_accessibilities = *
-dotnet_naming_symbols.方法.required_modifiers = 
+dotnet_naming_symbols.方法.required_modifiers =
 
 dotnet_naming_symbols.属性.applicable_kinds = property
 dotnet_naming_symbols.属性.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.属性.required_modifiers = 
+dotnet_naming_symbols.属性.required_modifiers =
 
 dotnet_naming_symbols.静态字段.applicable_kinds = field
 dotnet_naming_symbols.静态字段.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -257,15 +257,15 @@ dotnet_naming_symbols.静态字段.required_modifiers = static
 
 dotnet_naming_symbols.私有或内部字段.applicable_kinds = field
 dotnet_naming_symbols.私有或内部字段.applicable_accessibilities = internal, private, private_protected
-dotnet_naming_symbols.私有或内部字段.required_modifiers = 
+dotnet_naming_symbols.私有或内部字段.required_modifiers =
 
 dotnet_naming_symbols.类型_接口_类_枚举_结构体_.applicable_kinds = class, struct, interface, enum
 dotnet_naming_symbols.类型_接口_类_枚举_结构体_.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.类型_接口_类_枚举_结构体_.required_modifiers = 
+dotnet_naming_symbols.类型_接口_类_枚举_结构体_.required_modifiers =
 
 dotnet_naming_symbols.非字段成员.applicable_kinds = property, event, method
 dotnet_naming_symbols.非字段成员.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
-dotnet_naming_symbols.非字段成员.required_modifiers = 
+dotnet_naming_symbols.非字段成员.required_modifiers =
 
 dotnet_naming_symbols.常量.applicable_kinds = field
 dotnet_naming_symbols.常量.applicable_accessibilities = public, internal, private, protected, protected_internal, private_protected
@@ -281,24 +281,24 @@ dotnet_naming_symbols.公有静态只读字段.required_modifiers = readonly, st
 
 # 命名样式
 
-dotnet_naming_style.pascal_case.required_prefix = 
-dotnet_naming_style.pascal_case.required_suffix = 
-dotnet_naming_style.pascal_case.word_separator = 
+dotnet_naming_style.pascal_case.required_prefix =
+dotnet_naming_style.pascal_case.required_suffix =
+dotnet_naming_style.pascal_case.word_separator =
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
 dotnet_naming_style.以i开头.required_prefix = I
-dotnet_naming_style.以i开头.required_suffix = 
-dotnet_naming_style.以i开头.word_separator = 
+dotnet_naming_style.以i开头.required_suffix =
+dotnet_naming_style.以i开头.word_separator =
 dotnet_naming_style.以i开头.capitalization = pascal_case
 
 dotnet_naming_style.以s_为前缀.required_prefix = s_
-dotnet_naming_style.以s_为前缀.required_suffix = 
-dotnet_naming_style.以s_为前缀.word_separator = 
+dotnet_naming_style.以s_为前缀.required_suffix =
+dotnet_naming_style.以s_为前缀.word_separator =
 dotnet_naming_style.以s_为前缀.capitalization = camel_case
 
 dotnet_naming_style.以_为前缀.required_prefix = _
-dotnet_naming_style.以_为前缀.required_suffix = 
-dotnet_naming_style.以_为前缀.word_separator = 
+dotnet_naming_style.以_为前缀.required_suffix =
+dotnet_naming_style.以_为前缀.word_separator =
 dotnet_naming_style.以_为前缀.capitalization = camel_case
 
 [*.csproj]

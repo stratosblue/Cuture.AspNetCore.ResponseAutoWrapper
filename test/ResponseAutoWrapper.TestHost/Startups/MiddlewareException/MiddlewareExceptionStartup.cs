@@ -8,9 +8,15 @@ namespace ResponseAutoWrapper.TestHost;
 
 public class MiddlewareExceptionStartup : BaseStartup
 {
+    #region Public 构造函数
+
     public MiddlewareExceptionStartup(IConfiguration configuration) : base(configuration)
     {
     }
+
+    #endregion Public 构造函数
+
+    #region Public 方法
 
     public override void Configure(IApplicationBuilder app)
     {
@@ -31,4 +37,6 @@ public class MiddlewareExceptionStartup : BaseStartup
 
         services.AddResponseAutoWrapper();
     }
+
+    #endregion Public 方法
 }

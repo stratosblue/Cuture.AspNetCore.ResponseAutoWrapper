@@ -12,6 +12,8 @@ namespace SimpleWebApplication.Controllers;
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 {
+    #region Private 字段
+
     private static readonly string[] Summaries = new[]
     {
         "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
@@ -19,10 +21,18 @@ public class WeatherForecastController : ControllerBase
 
     private readonly ILogger<WeatherForecastController> _logger;
 
+    #endregion Private 字段
+
+    #region Public 构造函数
+
     public WeatherForecastController(ILogger<WeatherForecastController> logger)
     {
         _logger = logger;
     }
+
+    #endregion Public 构造函数
+
+    #region Public 方法
 
     [HttpGet]
     public IEnumerable<WeatherForecast> Get()
@@ -51,4 +61,6 @@ public class WeatherForecastController : ControllerBase
     {
         throw new Exception("Some Exception Throwed.");
     }
+
+    #endregion Public 方法
 }

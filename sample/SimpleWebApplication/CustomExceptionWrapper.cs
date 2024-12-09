@@ -11,6 +11,8 @@ namespace SimpleWebApplication;
 
 public class CustomExceptionWrapper : IExceptionWrapper<GenericApiResponse<int, string, object>, int, string>
 {
+    #region Public 方法
+
     public GenericApiResponse<int, string, object>? Wrap(HttpContext context, Exception exception)
     {
         return new GenericApiResponse<int, string, object>(13579)
@@ -18,4 +20,6 @@ public class CustomExceptionWrapper : IExceptionWrapper<GenericApiResponse<int, 
             Message = exception.StackTrace,
         };
     }
+
+    #endregion Public 方法
 }

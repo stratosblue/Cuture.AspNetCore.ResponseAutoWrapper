@@ -5,9 +5,15 @@ namespace ResponseAutoWrapper.TestHost;
 
 public class EmptyStartup : BaseStartup
 {
+    #region Public 构造函数
+
     public EmptyStartup(IConfiguration configuration) : base(configuration)
     {
     }
+
+    #endregion Public 构造函数
+
+    #region Public 方法
 
     public override void Configure(IApplicationBuilder app)
     {
@@ -15,4 +21,6 @@ public class EmptyStartup : BaseStartup
 
         base.Configure(app);
     }
+
+    #endregion Public 方法
 }

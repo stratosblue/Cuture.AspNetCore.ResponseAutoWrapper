@@ -42,7 +42,9 @@ public class CustomResponse<TData>
 public enum ResponseState
 {
     Success,
+
     Fail,
+
     Error,
 }
 
@@ -67,14 +69,11 @@ public struct ResponseCode
 
     static ResponseCode()
     {
-
     }
 
     #endregion Public 构造函数
 
-    #region Private 类
 
-    #endregion Private 类
 
     #region Public 构造函数
 
@@ -129,7 +128,8 @@ public struct ResponseCode
         #endregion Public 方法
     }
 }
-#endregion
+
+#endregion Code
 
 #region Message
 
@@ -149,7 +149,6 @@ public class ResponseMessage
     public ActivityTraceId? TraceId { get; set; }
 
     #endregion Public 属性
-
 }
 
-#endregion
+#endregion Message

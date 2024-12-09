@@ -6,9 +6,15 @@ namespace ResponseAutoWrapper.TestHost;
 
 public class DefaultStartup : BaseStartup
 {
+    #region Public 构造函数
+
     public DefaultStartup(IConfiguration configuration) : base(configuration)
     {
     }
+
+    #endregion Public 构造函数
+
+    #region Public 方法
 
     public override void Configure(IApplicationBuilder app)
     {
@@ -23,4 +29,6 @@ public class DefaultStartup : BaseStartup
 
         services.AddResponseAutoWrapper();
     }
+
+    #endregion Public 方法
 }

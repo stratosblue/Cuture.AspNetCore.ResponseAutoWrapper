@@ -17,6 +17,7 @@ public abstract class GenericWeatherForecastController : ControllerBase
     #region Public 字段
 
     public const int CustomCode = 10086;
+
     public const string CustomMessage = "Hello world!";
 
     #endregion Public 字段

@@ -8,9 +8,15 @@ namespace ResponseAutoWrapper.TestHost;
 
 public class CustomResponseByResponseCreatorMiddlewareExceptionStartup : BaseStartup
 {
+    #region Public 构造函数
+
     public CustomResponseByResponseCreatorMiddlewareExceptionStartup(IConfiguration configuration) : base(configuration)
     {
     }
+
+    #endregion Public 构造函数
+
+    #region Public 方法
 
     public override void Configure(IApplicationBuilder app)
     {
@@ -32,4 +38,6 @@ public class CustomResponseByResponseCreatorMiddlewareExceptionStartup : BaseSta
         services.AddResponseAutoWrapper<LegacyCustomResponse<object>, int, string>()
                 .ConfigureWrappers(builder => builder.AddLegacyWrappers<LegacyCustomResponseWrapper>());
     }
+
+    #endregion Public 方法
 }

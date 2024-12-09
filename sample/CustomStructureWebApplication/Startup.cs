@@ -1,5 +1,4 @@
-﻿
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,27 +8,25 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace CustomStructureWebApplication;
+
 public class Startup
 {
+    #region Public 属性
+
+    public IConfiguration Configuration { get; }
+
+    #endregion Public 属性
+
+    #region Public 构造函数
+
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
     }
 
-    public IConfiguration Configuration { get; }
+    #endregion Public 构造函数
 
-    // This method gets called by the runtime. Use this method to add services to the container.
-    public void ConfigureServices(IServiceCollection services)
-    {
-        services.AddControllers();
-        services.AddSwaggerGen(c =>
-        {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomStructureWebApplication", Version = "v1" });
-        });
-
-        services.AddResponseAutoWrapper<CommonResponse<object>, string, RichMessage>()
-                .ConfigureWrappers(options => options.AddWrappers<CustomWrapper>());
-    }
+    #region Public 方法
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -67,4 +64,19 @@ public class Startup
             endpoints.MapControllers();
         });
     }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddControllers();
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "CustomStructureWebApplication", Version = "v1" });
+        });
+
+        services.AddResponseAutoWrapper<CommonResponse<object>, string, RichMessage>()
+                .ConfigureWrappers(options => options.AddWrappers<CustomWrapper>());
+    }
+
+    #endregion Public 方法
 }

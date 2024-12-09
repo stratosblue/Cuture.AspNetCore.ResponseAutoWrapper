@@ -6,6 +6,8 @@ namespace ResponseAutoWrapper.TestHost;
 
 public class InheritedTask<T> : Task<T>
 {
+    #region Public 构造函数
+
     public InheritedTask(Func<T> function) : base(function)
     {
     }
@@ -37,10 +39,14 @@ public class InheritedTask<T> : Task<T>
     public InheritedTask(Func<object?, T> function, object? state, CancellationToken cancellationToken, TaskCreationOptions creationOptions) : base(function, state, cancellationToken, creationOptions)
     {
     }
+
+    #endregion Public 构造函数
 }
 
 public class TwiceInheritedTask : InheritedTask<WeatherForecast[]>
 {
+    #region Public 构造函数
+
     public TwiceInheritedTask(Func<WeatherForecast[]> function) : base(function)
     {
     }
@@ -72,4 +78,6 @@ public class TwiceInheritedTask : InheritedTask<WeatherForecast[]>
     public TwiceInheritedTask(Func<object?, WeatherForecast[]> function, object? state, CancellationToken cancellationToken, TaskCreationOptions creationOptions) : base(function, state, cancellationToken, creationOptions)
     {
     }
+
+    #endregion Public 构造函数
 }

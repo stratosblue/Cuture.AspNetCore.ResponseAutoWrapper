@@ -15,6 +15,20 @@ namespace ResponseAutoWrapper.TestHost.Controllers;
 [Route("api/[controller]")]
 public class LoginController : ControllerBase
 {
+    #region Public 方法
+
+    [HttpGet]
+    [Route("cookie")]
+    public async Task CookieAsync([FromQuery] bool canAccess)
+    {
+        var claimsIdentity = new ClaimsIdentity(new[]
+        {
+            new Claim("CanAccess",canAccess?"1":"0"),
+        }, CookieAuthenticationDefaults.AuthenticationScheme);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
+    }
+
     [HttpGet]
     [Route("jwt")]
     public string Jwt([FromQuery] bool canAccess)
@@ -32,15 +46,5 @@ public class LoginController : ControllerBase
         return token;
     }
 
-    [HttpGet]
-    [Route("cookie")]
-    public async Task CookieAsync([FromQuery] bool canAccess)
-    {
-        var claimsIdentity = new ClaimsIdentity(new[]
-        {
-            new Claim("CanAccess",canAccess?"1":"0"),
-        }, CookieAuthenticationDefaults.AuthenticationScheme);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal);
-    }
+    #endregion Public 方法
 }

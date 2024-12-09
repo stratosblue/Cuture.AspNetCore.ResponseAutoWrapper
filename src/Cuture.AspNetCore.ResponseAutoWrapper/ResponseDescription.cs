@@ -5,6 +5,8 @@
 /// </summary>
 public class ResponseDescription<TCode, TMessage>
 {
+    #region Public 属性
+
     /// <summary>
     /// Code
     /// </summary>
@@ -14,6 +16,10 @@ public class ResponseDescription<TCode, TMessage>
     /// 消息
     /// </summary>
     public TMessage? Message { get; }
+
+    #endregion Public 属性
+
+    #region Public 构造函数
 
     /// <inheritdoc cref="ResponseDescription(TCode, TMessage?)"/>
     public ResponseDescription(TCode code)
@@ -32,6 +38,12 @@ public class ResponseDescription<TCode, TMessage>
         Message = message;
     }
 
+    #endregion Public 构造函数
+
+    #region Public 方法
+
     /// <inheritdoc/>
     public override string ToString() => $"Code: {Code} , Message: {Message}";
+
+    #endregion Public 方法
 }
