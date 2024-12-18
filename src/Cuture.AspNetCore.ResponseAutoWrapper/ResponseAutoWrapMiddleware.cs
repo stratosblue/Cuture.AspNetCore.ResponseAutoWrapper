@@ -41,6 +41,9 @@ internal class ResponseAutoWrapMiddleware
 
     private readonly IHttpResponseStreamWriterFactory _httpResponseStreamWriterFactory;
 
+    /// <inheritdoc cref="ResponseAutoWrapMiddlewareOptions.IgnoreOptionsRequest"/>
+    private readonly bool _ignoreOptionsRequest;
+
     private readonly OutputFormatterSelector _outputFormatterSelector;
 
     #endregion OutputFormat
@@ -86,6 +89,7 @@ internal class ResponseAutoWrapMiddleware
 
         _notCatchExceptions = !options.CatchExceptions;
         _throwCaughtExceptions = options.ThrowCaughtExceptions;
+        _ignoreOptionsRequest = options.IgnoreOptionsRequest;
 
         var delegateCollection = GetService<ResponseAutoWrapperWorkDelegateCollection>();
 
@@ -101,6 +105,13 @@ internal class ResponseAutoWrapMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
+        if (_ignoreOptionsRequest
+            && HttpMethods.IsOptions(context.Request.Method))
+        {
+            await _next(context);
+            return;
+        }
+
         try
         {
             await _next(context);

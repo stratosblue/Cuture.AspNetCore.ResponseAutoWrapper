@@ -28,6 +28,11 @@ public class ResponseAutoWrapMiddlewareOptions
                                                             ?? throw new InvalidOperationException($"Can not found {nameof(SystemTextJsonOutputFormatter)} by default. Must select a formatter manually by \"{nameof(ResponseAutoWrapMiddlewareOptions)}.{nameof(DefaultOutputFormatterSelector)}\" at middleware setup.");
 
     /// <summary>
+    /// 忽略 OPTIONS 请求
+    /// </summary>
+    public bool IgnoreOptionsRequest { get; set; } = true;
+
+    /// <summary>
     /// 是否将捕获到的异常抛出给上层中间件<para/>
     /// default is <see langword="false"/>
     /// </summary>

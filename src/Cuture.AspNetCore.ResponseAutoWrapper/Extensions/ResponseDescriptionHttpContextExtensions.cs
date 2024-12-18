@@ -106,7 +106,7 @@ public static class ResponseDescriptionHttpContextExtensions
     #region Private 方法
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static Exception DescriptionTypeNotMatchException<TCode, TMessage>()
+    private static InvalidOperationException DescriptionTypeNotMatchException<TCode, TMessage>()
     {
         return new InvalidOperationException($"The http context has description object. But it's not the instance of {typeof(ResponseDescription<TCode, TMessage>)}. This situation is likely to be the description type use error. Please check it.");
     }
