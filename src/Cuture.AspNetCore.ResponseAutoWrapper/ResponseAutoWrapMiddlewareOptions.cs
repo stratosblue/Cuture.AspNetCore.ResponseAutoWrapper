@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper;
@@ -10,6 +10,18 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// </summary>
 public class ResponseAutoWrapMiddlewareOptions
 {
+    #region Public 委托
+
+    /// <summary>
+    /// 中间件异常已捕获
+    /// </summary>
+    /// <param name="request">出现异常的请求</param>
+    /// <param name="exception">异常</param>
+    /// <param name="doesExceptionWrapped">异常是否已包装</param>
+    public delegate void MiddlewareExceptionCaptured(HttpRequest request, Exception exception, in bool doesExceptionWrapped);
+
+    #endregion Public 委托
+
     #region Public 属性
 
     /// <summary>
@@ -31,6 +43,11 @@ public class ResponseAutoWrapMiddlewareOptions
     /// 忽略 OPTIONS 请求
     /// </summary>
     public bool IgnoreOptionsRequest { get; set; } = true;
+
+    /// <summary>
+    /// 在中间件已捕获异常时的回调
+    /// </summary>
+    public MiddlewareExceptionCaptured? OnMiddlewareExceptionCaptured { get; set; }
 
     /// <summary>
     /// 是否将捕获到的异常抛出给上层中间件<para/>
