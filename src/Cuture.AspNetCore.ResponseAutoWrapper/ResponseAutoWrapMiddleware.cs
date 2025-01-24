@@ -26,8 +26,6 @@ internal class ResponseAutoWrapMiddleware
 
     private readonly ILogger _logger;
 
-    private readonly ResponseAutoWrapMiddlewareOptions.MiddlewareExceptionCaptured _middlewareExceptionCaptured;
-
     private readonly RequestDelegate _next;
 
     private readonly bool _notCatchExceptions;
@@ -92,7 +90,6 @@ internal class ResponseAutoWrapMiddleware
         _notCatchExceptions = !options.CatchExceptions;
         _throwCaughtExceptions = options.ThrowCaughtExceptions;
         _ignoreOptionsRequest = options.IgnoreOptionsRequest;
-        _middlewareExceptionCaptured = options.OnMiddlewareExceptionCaptured ?? LogMiddlewareException;
 
         var delegateCollection = GetService<ResponseAutoWrapperWorkDelegateCollection>();
 
@@ -126,8 +123,6 @@ internal class ResponseAutoWrapMiddleware
                 throw;
             }
 
-            var doesExceptionWrapped = false;
-
             //响应未开始，则包装响应
             if (!context.Response.HasStarted
                 && !context.RequestAborted.IsCancellationRequested)
@@ -136,7 +131,6 @@ internal class ResponseAutoWrapMiddleware
                 if (response is not null)
                 {
                     await WriteResponseWithFormatterAsync(context, response);
-                    doesExceptionWrapped = true;
                 }
             }
             else //无法对响应进行包装，此时强制向上层抛出异常
@@ -150,7 +144,7 @@ internal class ResponseAutoWrapMiddleware
             }
             else //不抛出异常时，触发回调
             {
-                _middlewareExceptionCaptured(context.Request, ex, doesExceptionWrapped);
+                LogMiddlewareException(context.Request, ex);
             }
         }
         finally
@@ -178,8 +172,7 @@ internal class ResponseAutoWrapMiddleware
     /// </summary>
     /// <param name="request">出现异常的请求</param>
     /// <param name="exception">异常</param>
-    /// <param name="hasExceptionWrapped">异常是否已包装</param>
-    private void LogMiddlewareException(HttpRequest request, Exception exception, in bool hasExceptionWrapped)
+    private void LogMiddlewareException(HttpRequest request, Exception exception)
     {
         //https://github.com/dotnet/aspnetcore/tree/8dd33378697e6f8ca89116170ec3046c185724b6/src/Hosting/Hosting/src/Internal/HostingRequestStartingLog.cs
         _logger.LogError(exception, "Request error {Protocol} {Method} {Scheme}://{Host}{PathBase}{Path}{QueryString} {ContentType} {ContentLength}",
