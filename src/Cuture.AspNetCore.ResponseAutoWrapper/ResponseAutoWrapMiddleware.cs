@@ -95,8 +95,9 @@ internal class ResponseAutoWrapMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if (_ignoreOptionsRequest
-            && HttpMethods.IsOptions(context.Request.Method))
+        if ((_ignoreOptionsRequest
+             && HttpMethods.IsOptions(context.Request.Method))
+            || context.IsSetDoNotWrapResponse())
         {
             await _next(context);
             return;
@@ -108,7 +109,8 @@ internal class ResponseAutoWrapMiddleware
         }
         catch (Exception ex)
         {
-            if (_notCatchExceptions)
+            if (_notCatchExceptions
+                || context.IsSetDoNotWrapResponse())
             {
                 throw;
             }
@@ -141,7 +143,8 @@ internal class ResponseAutoWrapMiddleware
         {
             if (!context.Response.HasStarted
                 && !context.RequestAborted.IsCancellationRequested
-                && context.Response.StatusCode != StatusCodes.Status200OK)
+                && context.Response.StatusCode != StatusCodes.Status200OK
+                && !context.IsSetDoNotWrapResponse())
             {
                 var response = _notOKStatusCodeWrapDelegate(context);
                 if (response is not null)
