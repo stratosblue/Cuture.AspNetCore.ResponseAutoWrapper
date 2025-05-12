@@ -5,13 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal;
 
-internal class ApiBehaviorOptionsPostConfigureOptions : PostConfigureOptions<ApiBehaviorOptions>
+internal class ApiBehaviorOptionsPostConfigureOptions(string name, Action<ApiBehaviorOptions> action)
+    : PostConfigureOptions<ApiBehaviorOptions>(name, action)
 {
-    #region Public 构造函数
-
-    public ApiBehaviorOptionsPostConfigureOptions(string name, Action<ApiBehaviorOptions> action) : base(name, action)
-    {
-    }
-
-    #endregion Public 构造函数
 }

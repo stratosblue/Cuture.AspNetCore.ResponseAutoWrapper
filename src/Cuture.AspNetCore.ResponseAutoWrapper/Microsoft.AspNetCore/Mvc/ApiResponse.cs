@@ -8,16 +8,8 @@ namespace Microsoft.AspNetCore.Mvc;
 /// API响应
 /// </summary>
 [Serializable]
-public class ApiResponse : ApiResponse<object>
+public class ApiResponse(int code) : ApiResponse<object>(code)
 {
-    #region Public 构造函数
-
-    /// <inheritdoc cref="ApiResponse"/>
-    public ApiResponse(int code) : base(code)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 
@@ -73,17 +65,12 @@ public class ApiResponse : ApiResponse<object>
 /// </summary>
 /// <typeparam name="TData"></typeparam>
 [Serializable]
-public class ApiResponse<TData> : GenericApiResponse<int, string, TData>
+public class ApiResponse<TData>(int code) : GenericApiResponse<int, string, TData>(code)
 {
     #region Public 构造函数
 
     /// <inheritdoc cref="ApiResponse"/>
     public ApiResponse() : this(StatusCodes.Status200OK)
-    {
-    }
-
-    /// <inheritdoc cref="ApiResponse"/>
-    public ApiResponse(int code) : base(code)
     {
     }
 

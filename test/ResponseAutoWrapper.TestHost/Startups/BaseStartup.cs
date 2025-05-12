@@ -12,22 +12,13 @@ using Microsoft.OpenApi.Models;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public abstract class BaseStartup
+public abstract class BaseStartup(IConfiguration configuration)
 {
     #region Public 属性
 
-    public IConfiguration Configuration { get; }
+    public IConfiguration Configuration { get; } = configuration;
 
     #endregion Public 属性
-
-    #region Public 构造函数
-
-    public BaseStartup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

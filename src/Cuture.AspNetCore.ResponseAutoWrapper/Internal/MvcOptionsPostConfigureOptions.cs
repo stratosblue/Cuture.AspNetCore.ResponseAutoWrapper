@@ -5,13 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace Cuture.AspNetCore.ResponseAutoWrapper.Internal;
 
-internal class MvcOptionsPostConfigureOptions : PostConfigureOptions<MvcOptions>
+internal class MvcOptionsPostConfigureOptions(string name, Action<MvcOptions> action)
+    : PostConfigureOptions<MvcOptions>(name, action)
 {
-    #region Public 构造函数
-
-    public MvcOptionsPostConfigureOptions(string name, Action<MvcOptions> action) : base(name, action)
-    {
-    }
-
-    #endregion Public 构造函数
 }

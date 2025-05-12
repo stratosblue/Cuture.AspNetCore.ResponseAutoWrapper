@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -9,20 +8,6 @@ namespace SimpleWebApplication;
 
 public class Startup
 {
-    #region Public 属性
-
-    public IConfiguration Configuration { get; }
-
-    #endregion Public 属性
-
-    #region Public 构造函数
-
-    public Startup(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

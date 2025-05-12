@@ -10,15 +10,9 @@ using Microsoft.Extensions.Options;
 
 namespace CustomStructureWebApplication;
 
-public class CustomWrapper : AbstractResponseWrapper<CommonResponse<object>, string, RichMessage>
+public class CustomWrapper(IWrapTypeCreator<string, RichMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
+    : AbstractResponseWrapper<CommonResponse<object>, string, RichMessage>(wrapTypeCreator, optionsAccessor)
 {
-    #region Public 构造函数
-
-    public CustomWrapper(IWrapTypeCreator<string, RichMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor) : base(wrapTypeCreator, optionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

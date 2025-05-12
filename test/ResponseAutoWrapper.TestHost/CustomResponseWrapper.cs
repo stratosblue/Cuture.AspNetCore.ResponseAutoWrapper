@@ -11,16 +11,9 @@ using Microsoft.Extensions.Options;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class NotGenericCustomResponseWrapper : AbstractResponseWrapper<CustomResponse, ResponseCode, ResponseMessage>
+public class NotGenericCustomResponseWrapper(IWrapTypeCreator<ResponseCode, ResponseMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
+    : AbstractResponseWrapper<CustomResponse, ResponseCode, ResponseMessage>(wrapTypeCreator, optionsAccessor)
 {
-    #region Public 构造函数
-
-    public NotGenericCustomResponseWrapper(IWrapTypeCreator<ResponseCode, ResponseMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
-        : base(wrapTypeCreator, optionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 
@@ -70,16 +63,9 @@ public class NotGenericCustomResponseWrapper : AbstractResponseWrapper<CustomRes
     #endregion Protected 方法
 }
 
-public class CustomResponseWrapper : AbstractResponseWrapper<CustomResponse<object>, ResponseCode, ResponseMessage>
+public class CustomResponseWrapper(IWrapTypeCreator<ResponseCode, ResponseMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
+    : AbstractResponseWrapper<CustomResponse<object>, ResponseCode, ResponseMessage>(wrapTypeCreator, optionsAccessor)
 {
-    #region Public 构造函数
-
-    public CustomResponseWrapper(IWrapTypeCreator<ResponseCode, ResponseMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
-        : base(wrapTypeCreator, optionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

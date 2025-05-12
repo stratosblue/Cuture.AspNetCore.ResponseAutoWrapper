@@ -4,15 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class LCRStartup : BaseStartup
+public class LCRStartup(IConfiguration configuration) : BaseStartup(configuration)
 {
-    #region Public 构造函数
-
-    public LCRStartup(IConfiguration configuration) : base(configuration)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

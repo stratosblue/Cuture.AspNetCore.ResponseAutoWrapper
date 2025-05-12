@@ -5,16 +5,8 @@ namespace Microsoft.AspNetCore.Mvc;
 /// <summary>
 /// 空API响应
 /// </summary>
-public class EmptyApiResponse : ApiResponse
+public class EmptyApiResponse(int code) : ApiResponse(code)
 {
-    #region Public 构造函数
-
-    /// <inheritdoc cref="EmptyApiResponse"/>
-    public EmptyApiResponse(int code) : base(code)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

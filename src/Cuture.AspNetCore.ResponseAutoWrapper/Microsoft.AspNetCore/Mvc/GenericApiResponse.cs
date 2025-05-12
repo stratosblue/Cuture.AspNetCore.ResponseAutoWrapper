@@ -57,26 +57,16 @@ public abstract class GenericApiResponse
 /// </summary>
 /// <typeparam name="TCode">指定Code类型</typeparam>
 [Serializable]
-public abstract class GenericApiResponse<TCode> : GenericApiResponse
+public abstract class GenericApiResponse<TCode>(TCode code) : GenericApiResponse
 {
     #region Public 属性
 
     /// <summary>
     /// 状态码
     /// </summary>
-    public TCode Code { get; set; }
+    public TCode Code { get; set; } = code;
 
     #endregion Public 属性
-
-    #region Protected 构造函数
-
-    /// <inheritdoc cref="GenericApiResponse"/>
-    protected GenericApiResponse(TCode code)
-    {
-        Code = code;
-    }
-
-    #endregion Protected 构造函数
 }
 
 /// <summary>
@@ -85,7 +75,7 @@ public abstract class GenericApiResponse<TCode> : GenericApiResponse
 /// <typeparam name="TCode">指定Code类型</typeparam>
 /// <typeparam name="TMessage">指定Message类型</typeparam>
 [Serializable]
-public abstract class GenericApiResponse<TCode, TMessage> : GenericApiResponse<TCode>
+public abstract class GenericApiResponse<TCode, TMessage>(TCode code) : GenericApiResponse<TCode>(code)
 {
     #region Public 属性
 
@@ -95,15 +85,6 @@ public abstract class GenericApiResponse<TCode, TMessage> : GenericApiResponse<T
     public TMessage? Message { get; set; }
 
     #endregion Public 属性
-
-    #region Protected 构造函数
-
-    /// <inheritdoc cref="GenericApiResponse"/>
-    protected GenericApiResponse(TCode code) : base(code)
-    {
-    }
-
-    #endregion Protected 构造函数
 }
 
 /// <summary>
@@ -113,7 +94,7 @@ public abstract class GenericApiResponse<TCode, TMessage> : GenericApiResponse<T
 /// <typeparam name="TMessage"></typeparam>
 /// <typeparam name="TData"></typeparam>
 [Serializable]
-public class GenericApiResponse<TCode, TMessage, TData> : GenericApiResponse<TCode, TMessage>
+public class GenericApiResponse<TCode, TMessage, TData>(TCode code) : GenericApiResponse<TCode, TMessage>(code)
 {
     #region Public 属性
 
@@ -123,13 +104,4 @@ public class GenericApiResponse<TCode, TMessage, TData> : GenericApiResponse<TCo
     public TData? Data { get; set; }
 
     #endregion Public 属性
-
-    #region Public 构造函数
-
-    /// <inheritdoc cref="GenericApiResponse"/>
-    public GenericApiResponse(TCode code) : base(code)
-    {
-    }
-
-    #endregion Public 构造函数
 }

@@ -6,15 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class CustomResponseByResponseCreatorMiddlewareExceptionStartup : BaseStartup
+public class CustomResponseByResponseCreatorMiddlewareExceptionStartup(IConfiguration configuration) : BaseStartup(configuration)
 {
-    #region Public 构造函数
-
-    public CustomResponseByResponseCreatorMiddlewareExceptionStartup(IConfiguration configuration) : base(configuration)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Public 方法
 

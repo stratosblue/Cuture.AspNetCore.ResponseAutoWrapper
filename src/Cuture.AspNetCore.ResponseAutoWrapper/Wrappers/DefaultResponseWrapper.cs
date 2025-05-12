@@ -8,19 +8,12 @@ namespace Cuture.AspNetCore.ResponseAutoWrapper;
 /// TCode 为 <see cref="int"/><para/>
 /// TMessage 为 <see cref="string"/>
 /// </summary>
-internal sealed class DefaultResponseWrapper : LegacyCompatibleResponseWrapper<GenericApiResponse<int, string, object>>
+/// <inheritdoc cref="DefaultResponseWrapper"/>
+internal sealed class DefaultResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator,
+                                             IOptions<ResponseAutoWrapperOptions> optionsAccessor,
+                                             IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
+    : LegacyCompatibleResponseWrapper<GenericApiResponse<int, string, object>>(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
 {
-    #region Public 构造函数
-
-    /// <inheritdoc cref="DefaultResponseWrapper"/>
-    public DefaultResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator,
-                                  IOptions<ResponseAutoWrapperOptions> optionsAccessor,
-                                  IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
-        : base(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region CreateResponse
 

@@ -49,7 +49,7 @@ public enum ResponseState
 }
 
 [JsonConverter(typeof(ResponseCodeConverter))]
-public readonly struct ResponseCode
+public readonly struct ResponseCode(ResponseState state, int businessCode)
 {
     #region Public 字段
 
@@ -59,9 +59,9 @@ public readonly struct ResponseCode
 
     #region Public 属性
 
-    public int BusinessCode { get; }
+    public int BusinessCode { get; } = businessCode;
 
-    public ResponseState State { get; }
+    public ResponseState State { get; } = state;
 
     #endregion Public 属性
 
@@ -69,18 +69,6 @@ public readonly struct ResponseCode
 
     static ResponseCode()
     {
-    }
-
-    #endregion Public 构造函数
-
-
-
-    #region Public 构造函数
-
-    public ResponseCode(ResponseState state, int businessCode)
-    {
-        State = state;
-        BusinessCode = businessCode;
     }
 
     #endregion Public 构造函数

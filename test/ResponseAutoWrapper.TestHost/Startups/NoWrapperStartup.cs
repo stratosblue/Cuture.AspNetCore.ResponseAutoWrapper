@@ -2,13 +2,6 @@
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class NoWrapperStartup : BaseStartup
+public class NoWrapperStartup(IConfiguration configuration) : BaseStartup(configuration)
 {
-    #region Public 构造函数
-
-    public NoWrapperStartup(IConfiguration configuration) : base(configuration)
-    {
-    }
-
-    #endregion Public 构造函数
 }

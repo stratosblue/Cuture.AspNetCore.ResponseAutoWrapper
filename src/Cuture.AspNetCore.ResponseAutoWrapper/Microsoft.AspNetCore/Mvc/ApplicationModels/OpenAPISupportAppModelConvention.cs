@@ -7,16 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Mvc.ApplicationModels;
 
-internal class OpenAPISupportAppModelConvention<TCode, TMessage> : ActionResultPolicyTagAppModelConvention<TCode, TMessage>
+internal class OpenAPISupportAppModelConvention<TCode, TMessage>(IWrapTypeCreator<TCode, TMessage> wrapTypeCreator, Func<MemberInfo, bool> actionNoWrapPredicate)
+    : ActionResultPolicyTagAppModelConvention<TCode, TMessage>(wrapTypeCreator, actionNoWrapPredicate)
 {
-    #region Public 构造函数
-
-    public OpenAPISupportAppModelConvention(IWrapTypeCreator<TCode, TMessage> wrapTypeCreator, Func<MemberInfo, bool> actionNoWrapPredicate)
-        : base(wrapTypeCreator, actionNoWrapPredicate)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Protected 方法
 

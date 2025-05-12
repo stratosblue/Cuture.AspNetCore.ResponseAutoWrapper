@@ -4,16 +4,9 @@ using Microsoft.Extensions.Options;
 
 namespace ResponseAutoWrapper.TestHost;
 
-public class NotGenericLegacyCustomResponseWrapper : LegacyCompatibleResponseWrapper<LegacyCustomResponse>
+public class NotGenericLegacyCustomResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor, IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
+    : LegacyCompatibleResponseWrapper<LegacyCustomResponse>(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
 {
-    #region Public 构造函数
-
-    public NotGenericLegacyCustomResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor, IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
-        : base(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Protected 方法
 
@@ -26,16 +19,9 @@ public class NotGenericLegacyCustomResponseWrapper : LegacyCompatibleResponseWra
     #endregion Protected 方法
 }
 
-public class LegacyCustomResponseWrapper : LegacyCompatibleResponseWrapper<LegacyCustomResponse<object>>
+public class LegacyCustomResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor, IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
+    : LegacyCompatibleResponseWrapper<LegacyCustomResponse<object>>(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
 {
-    #region Public 构造函数
-
-    public LegacyCustomResponseWrapper(IWrapTypeCreator<int, string> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor, IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
-        : base(wrapTypeCreator, optionsAccessor, wrapperOptionsAccessor)
-    {
-    }
-
-    #endregion Public 构造函数
 
     #region Protected 方法
 
