@@ -23,7 +23,9 @@ internal class ResponseAutoWrapResultFilter<TResponse, TCode, TMessage> : IAsync
     /// <inheritdoc cref="ResponseAutoWrapResultFilter{TResponse, TCode, TMessage}"/>
     public ResponseAutoWrapResultFilter(IActionResultWrapper<TResponse, TCode, TMessage> actionResultWrapper)
     {
-        _actionResultWrapper = actionResultWrapper ?? throw new ArgumentNullException(nameof(actionResultWrapper));
+        ArgumentNullException.ThrowIfNull(actionResultWrapper);
+
+        _actionResultWrapper = actionResultWrapper;
     }
 
     #endregion Public 构造函数

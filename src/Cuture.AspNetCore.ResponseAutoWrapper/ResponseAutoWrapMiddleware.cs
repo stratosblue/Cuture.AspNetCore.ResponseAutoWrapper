@@ -57,22 +57,12 @@ internal class ResponseAutoWrapMiddleware
                                       IServiceProvider serviceProvider,
                                       ResponseAutoWrapMiddlewareOptions options)
     {
-        _next = next ?? throw new ArgumentNullException(nameof(next));
+        ArgumentNullException.ThrowIfNull(next);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(options.DefaultOutputFormatterSelector);
 
-        if (serviceProvider is null)
-        {
-            throw new ArgumentNullException(nameof(serviceProvider));
-        }
-
-        if (options is null)
-        {
-            throw new ArgumentNullException(nameof(options));
-        }
-
-        if (options.DefaultOutputFormatterSelector is null)
-        {
-            throw new InvalidOperationException($"{nameof(options)}.{nameof(options.DefaultOutputFormatterSelector)} can not be null.");
-        }
+        _next = next;
 
         #region OutputFormat
 

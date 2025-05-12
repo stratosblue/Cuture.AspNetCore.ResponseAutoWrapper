@@ -19,10 +19,7 @@ internal static class ActivityExtensions
     /// <exception cref="ArgumentNullException"></exception>
     public static Activity AddException(this Activity activity, Exception exception, in TagList tags = default, DateTimeOffset timestamp = default)
     {
-        if (exception == null)
-        {
-            throw new ArgumentNullException(nameof(exception));
-        }
+        ArgumentNullException.ThrowIfNull(exception);
 
         TagList exceptionTags = tags;
 
@@ -66,7 +63,7 @@ internal static class ActivityExtensions
             exceptionTags.Add(new KeyValuePair<string, object?>(ExceptionTypeTag, exception.GetType().ToString()));
         }
 
-        return activity.AddEvent(new ActivityEvent(ExceptionEventName, timestamp, new ActivityTagsCollection(exceptionTags)));
+        return activity.AddEvent(new ActivityEvent(ExceptionEventName, timestamp, [.. exceptionTags]));
     }
 
     public static Activity? RecordException(this Activity? activity, Exception exception, in TagList tags = default, DateTimeOffset timestamp = default)

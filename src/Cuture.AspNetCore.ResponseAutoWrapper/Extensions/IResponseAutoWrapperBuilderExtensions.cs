@@ -65,7 +65,9 @@ public static class IResponseAutoWrapperBuilderExtensions
 
         internal WrapperBuilder(IServiceCollection services)
         {
-            _services = services ?? throw new ArgumentNullException(nameof(services));
+            ArgumentNullException.ThrowIfNull(services);
+
+            _services = services;
         }
 
         #endregion Public 构造函数

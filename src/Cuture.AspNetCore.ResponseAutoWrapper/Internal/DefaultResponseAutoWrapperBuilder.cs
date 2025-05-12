@@ -18,7 +18,9 @@ internal sealed class DefaultResponseAutoWrapperBuilder<TResponse, TCode, TMessa
 
     public DefaultResponseAutoWrapperBuilder(IServiceCollection services)
     {
-        Services = services ?? throw new ArgumentNullException(nameof(services));
+        ArgumentNullException.ThrowIfNull(services);
+
+        Services = services;
     }
 
     #endregion Public 构造函数

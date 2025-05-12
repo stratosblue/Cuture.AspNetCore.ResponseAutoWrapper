@@ -29,8 +29,11 @@ internal class ActionResultPolicyTagAppModelConvention<TCode, TMessage> : IAppli
 
     public ActionResultPolicyTagAppModelConvention(IWrapTypeCreator<TCode, TMessage> wrapTypeCreator, Func<MemberInfo, bool> actionNoWrapPredicate)
     {
-        WrapTypeCreator = wrapTypeCreator ?? throw new ArgumentNullException(nameof(wrapTypeCreator));
-        _actionNoWrapPredicate = actionNoWrapPredicate ?? throw new ArgumentNullException(nameof(actionNoWrapPredicate));
+        ArgumentNullException.ThrowIfNull(wrapTypeCreator);
+        ArgumentNullException.ThrowIfNull(actionNoWrapPredicate);
+
+        WrapTypeCreator = wrapTypeCreator;
+        _actionNoWrapPredicate = actionNoWrapPredicate;
     }
 
     #endregion Public 构造函数

@@ -21,7 +21,7 @@ internal class DefaultWrapTypeCreator<TCode, TMessage> : IWrapTypeCreator<TCode,
     /// <summary>
     /// 响应类型的泛型参数列表
     /// </summary>
-    private readonly Type[] _responseTypeGenericArguments = Array.Empty<Type>();
+    private readonly Type[] _responseTypeGenericArguments = [];
 
     /// <summary>
     /// 类型是否应该包装检查委托
@@ -49,7 +49,9 @@ internal class DefaultWrapTypeCreator<TCode, TMessage> : IWrapTypeCreator<TCode,
 
     public DefaultWrapTypeCreator(Type responseType, Type? responseGenericType)
     {
-        ResponseType = responseType ?? throw new ArgumentNullException(nameof(responseType));
+        ArgumentNullException.ThrowIfNull(responseType);
+
+        ResponseType = responseType;
         ResponseGenericType = responseGenericType ??= (responseType.IsGenericType ? responseType.GetGenericTypeDefinition() : null);
 
         if (responseGenericType is null)

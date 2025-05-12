@@ -49,7 +49,7 @@ public enum ResponseState
 }
 
 [JsonConverter(typeof(ResponseCodeConverter))]
-public struct ResponseCode
+public readonly struct ResponseCode
 {
     #region Public 字段
 

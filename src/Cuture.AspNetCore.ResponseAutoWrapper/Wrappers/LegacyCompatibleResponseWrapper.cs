@@ -32,7 +32,9 @@ public abstract class LegacyCompatibleResponseWrapper<TResponse> : AbstractRespo
                                            IOptions<LegacyCompatibleResponseWrapperOptions> wrapperOptionsAccessor)
         : base(wrapTypeCreator, optionsAccessor)
     {
-        _options = wrapperOptionsAccessor?.Value ?? throw new ArgumentNullException(nameof(wrapperOptionsAccessor));
+        ArgumentNullException.ThrowIfNull(wrapperOptionsAccessor?.Value);
+
+        _options = wrapperOptionsAccessor.Value;
     }
 
     #endregion Public 构造函数

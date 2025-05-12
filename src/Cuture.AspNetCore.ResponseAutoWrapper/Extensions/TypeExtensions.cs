@@ -15,15 +15,8 @@ internal static class TypeExtensions
     /// <returns></returns>
     public static Type[] FindImplementedGenericClassArguments(this Type type, Type genericClassType)
     {
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
-
-        if (genericClassType == null)
-        {
-            throw new ArgumentNullException(nameof(genericClassType));
-        }
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(genericClassType);
 
         if (!genericClassType.IsGenericTypeDefinition
             || genericClassType.IsInterface)
@@ -40,7 +33,7 @@ internal static class TypeExtensions
             type = type.BaseType!;
         }
 
-        return Array.Empty<Type>();
+        return [];
     }
 
     /// <summary>
@@ -51,15 +44,8 @@ internal static class TypeExtensions
     /// <returns></returns>
     public static Type[][] FindImplementedGenericInterfaceArguments(this Type type, Type genericInterfaceType)
     {
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
-
-        if (genericInterfaceType == null)
-        {
-            throw new ArgumentNullException(nameof(genericInterfaceType));
-        }
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(genericInterfaceType);
 
         if (!genericInterfaceType.IsGenericTypeDefinition
             || !genericInterfaceType.IsInterface)
@@ -81,15 +67,8 @@ internal static class TypeExtensions
     /// <returns>是否是泛型接口的子类型</returns>
     public static bool HasImplementedGeneric(this Type type, Type generic)
     {
-        if (type == null)
-        {
-            throw new ArgumentNullException(nameof(type));
-        }
-
-        if (generic == null)
-        {
-            throw new ArgumentNullException(nameof(generic));
-        }
+        ArgumentNullException.ThrowIfNull(type);
+        ArgumentNullException.ThrowIfNull(generic);
 
         if (!generic.IsGenericTypeDefinition)
         {

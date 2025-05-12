@@ -35,7 +35,9 @@ public abstract class AbstractResponseWrapper<TResponse, TCode, TMessage>
     /// <inheritdoc cref="AbstractResponseWrapper{TResponse, TCode, TMessage}"/>
     public AbstractResponseWrapper(IWrapTypeCreator<TCode, TMessage> wrapTypeCreator, IOptions<ResponseAutoWrapperOptions> optionsAccessor)
     {
-        WrapTypeCreator = wrapTypeCreator ?? throw new ArgumentNullException(nameof(wrapTypeCreator));
+        ArgumentNullException.ThrowIfNull(wrapTypeCreator);
+
+        WrapTypeCreator = wrapTypeCreator;
         RewriteStatusCode = optionsAccessor?.Value?.RewriteStatusCode;
     }
 

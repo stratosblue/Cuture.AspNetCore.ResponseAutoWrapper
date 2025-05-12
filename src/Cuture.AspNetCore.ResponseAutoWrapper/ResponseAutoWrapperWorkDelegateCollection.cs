@@ -33,8 +33,11 @@ public class ResponseAutoWrapperWorkDelegateCollection
     public ResponseAutoWrapperWorkDelegateCollection(Func<HttpContext, Exception, object?> exceptionWrapDelegate,
                                                      Func<HttpContext, object?> notOKStatusCodeWrapDelegate)
     {
-        ExceptionWrapDelegate = exceptionWrapDelegate ?? throw new ArgumentNullException(nameof(exceptionWrapDelegate));
-        NotOKStatusCodeWrapDelegate = notOKStatusCodeWrapDelegate ?? throw new ArgumentNullException(nameof(notOKStatusCodeWrapDelegate));
+        ArgumentNullException.ThrowIfNull(exceptionWrapDelegate);
+        ArgumentNullException.ThrowIfNull(notOKStatusCodeWrapDelegate);
+
+        ExceptionWrapDelegate = exceptionWrapDelegate;
+        NotOKStatusCodeWrapDelegate = notOKStatusCodeWrapDelegate;
     }
 
     #endregion Public 构造函数
