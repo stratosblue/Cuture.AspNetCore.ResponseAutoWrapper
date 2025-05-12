@@ -1,0 +1,19 @@
+<Solution>
+  <Folder Name="/sample/">
+    <Project Path="sample/CustomStructureWebApplication/CustomStructureWebApplication.csproj" />
+    <Project Path="sample/SimpleWebApplication/SimpleWebApplication.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+    <File Path="README.MD" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/Cuture.AspNetCore.ResponseAutoWrapper/Cuture.AspNetCore.ResponseAutoWrapper.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/ResponseAutoWrapper.BenchmarkHost/ResponseAutoWrapper.BenchmarkHost.csproj" />
+    <Project Path="test/ResponseAutoWrapper.Test/ResponseAutoWrapper.Test.csproj" />
+    <Project Path="test/ResponseAutoWrapper.TestHost/ResponseAutoWrapper.TestHost.csproj" />
+  </Folder>
+</Solution>
