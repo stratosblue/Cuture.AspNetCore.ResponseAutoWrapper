@@ -4,8 +4,13 @@
     <Project Path="sample/SimpleWebApplication/SimpleWebApplication.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="CodeMaid.config" />
     <File Path="Directory.Build.props" />
     <File Path="global.json" />
+    <File Path="LICENSE" />
     <File Path="README.MD" />
   </Folder>
   <Folder Name="/src/">
