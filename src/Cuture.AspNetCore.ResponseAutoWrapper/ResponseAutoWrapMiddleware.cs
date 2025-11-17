@@ -168,16 +168,19 @@ internal class ResponseAutoWrapMiddleware
     private void LogMiddlewareException(HttpRequest request, Exception exception)
     {
         //https://github.com/dotnet/aspnetcore/tree/8dd33378697e6f8ca89116170ec3046c185724b6/src/Hosting/Hosting/src/Internal/HostingRequestStartingLog.cs
-        _logger.LogError(exception, "Request error {Protocol} {Method} {Scheme}://{Host}{PathBase}{Path}{QueryString} {ContentType} {ContentLength}",
-                         request.Protocol,
-                         request.Method,
-                         request.Scheme,
-                         request.Host.Value,
-                         request.PathBase.Value,
-                         request.Path.Value,
-                         request.QueryString.Value,
-                         request.ContentType ?? string.Empty,
-                         request.ContentLength.HasValue ? request.ContentLength.ToString() : string.Empty);
+        if (_logger.IsEnabled(LogLevel.Error))
+        {
+            _logger.LogError(exception, "Request error {Protocol} {Method} {Scheme}://{Host}{PathBase}{Path}{QueryString} {ContentType} {ContentLength}",
+                             request.Protocol,
+                             request.Method,
+                             request.Scheme,
+                             request.Host.Value,
+                             request.PathBase.Value,
+                             request.Path.Value,
+                             request.QueryString.Value,
+                             request.ContentType ?? string.Empty,
+                             request.ContentLength.HasValue ? request.ContentLength.ToString() : string.Empty);
+        }
     }
 
     #endregion Private 方法

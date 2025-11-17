@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="Microsoft.VisualStudio.TestTools.UnitTesting.ParallelizeAttribute"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ResponseAutoWrapper.TestHost\ResponseAutoWrapper.TestHost.csproj" />
   </ItemGroup>
 </Project>

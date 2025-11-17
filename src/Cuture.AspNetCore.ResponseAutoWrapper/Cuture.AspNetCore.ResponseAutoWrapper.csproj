@@ -2,6 +2,8 @@
 
   <PropertyGroup>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+
+    <NoWarn>$(NoWarn);IDE0130</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,7 +18,7 @@
     <IsPackable>true</IsPackable>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
-    <Version>1.2.5</Version>
+    <Version>1.3.0</Version>
     <Description>Response and exception automatic wrapper for `asp.net core` to provide a consistent response content format for `Action`. 用于`asp.net core`的响应和异常自动包装器，使`Action`提供一致的响应内容格式。</Description>
 
     <PackageIdPrefix>Cuture.AspNetCore.ResponseAutoWrapper</PackageIdPrefix>

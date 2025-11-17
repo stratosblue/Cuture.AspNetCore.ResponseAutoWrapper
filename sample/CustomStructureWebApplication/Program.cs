@@ -1,23 +1,46 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using System.Diagnostics;
+using CustomStructureWebApplication;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace CustomStructureWebApplication;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.Services.AddControllers();
+builder.Services.AddOpenApi();
+
+builder.Services.AddResponseAutoWrapper<CommonResponse<object>, string, RichMessage>()
+                .ConfigureWrappers(options => options.AddWrappers<CustomWrapper>());
+
+var app = builder.Build();
+
+app.Use(async (context, next) =>
 {
-    #region Public 方法
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            });
-
-    public static void Main(string[] args)
+    using var activity = new Activity("request");
+    Activity.Current = activity;
+    activity.Start();
+    try
     {
-        CreateHostBuilder(args).Build().Run();
+        await next();
     }
+    finally
+    {
+        activity.Stop();
+    }
+});
 
-    #endregion Public 方法
+app.UseResponseAutoWrapper();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapSwaggerUI();
 }
+
+app.UseRouting();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
